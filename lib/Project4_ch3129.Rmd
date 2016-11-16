@@ -6,7 +6,7 @@ output: html_document
 ---
 ```{r}
 # set the workng directory 
-setwd("C:/Users/ch3129/Desktop/Project 4")
+setwd("C:/Users/celia/Desktop/Project 4")
 ```
 
 ```{r}
@@ -21,10 +21,10 @@ setwd("C:/Users/ch3129/Desktop/Project 4")
 # Download Packages
 #Reading hdf5 file
 #Download rhdf5 library
-source("http://bioconductor.org/biocLite.R")
-biocLite("rhdf5")
+#source("http://bioconductor.org/biocLite.R")
+#biocLite("rhdf5")
 # install missing packages
-list.of.packages <- c("NLP", "tm","lda","LDAvis","slam")
+list.of.packages <- c("NLP", "tm","lda","LDAvis","slam","rhdf5","servr")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 ```
@@ -38,18 +38,19 @@ library(NLP)
 library(tm);library(slam)# slam not available for R version 3.2.3
 library(lda)
 library(LDAvis)
+library(servr)
 ```
 
 ```{r}
 # The structure of a song
 #h5ls("/Users/Bianbian/Documents/Courses/2016Spring/4249_Applied Data Science/Proj5/MillionSongSubset/data/A/A/A/TRAAAAW128F429D538.h5")
-read1=h5ls('C:/Users/ch3129/Desktop/Project 4/Project4_data/data/A/A/A/TRAAABD128F429CF47.h5') #try out an example
+read1=h5ls('C:/Users/celia/Desktop/Project 4/Project4_data/data/A/A/A/TRAAABD128F429CF47.h5') #try out an example
 dim(read1);summary(read1);read1 #dim=27 by 5
 # the data are stored in three groups, analysis, metadata and musicbrainz
 # Get all data using h5read
-sound=h5read("C:/Users/ch3129/Desktop/Project 4/Project4_data/data/A/A/A/TRAAABD128F429CF47.h5", "/analysis")
-meta=h5read("C:/Users/ch3129/Desktop/Project 4/Project4_data/data/A/A/A/TRAAABD128F429CF47.h5", "/metadata")
-musicbrainz=h5read("C:/Users/ch3129/Desktop/Project 4/Project4_data/data/A/A/A/TRAAABD128F429CF47.h5", "/musicbrainz")
+sound=h5read("C:/Users/celia/Desktop/Project 4/Project4_data/data/A/A/A/TRAAABD128F429CF47.h5", "/analysis")
+meta=h5read("C:/Users/celia/Desktop/Project 4/Project4_data/data/A/A/A/TRAAABD128F429CF47.h5", "/metadata")
+musicbrainz=h5read("C:/Users/celia/Desktop/Project 4/Project4_data/data/A/A/A/TRAAABD128F429CF47.h5", "/musicbrainz")
 sound
 summary(sound)
 meta
@@ -62,12 +63,21 @@ sound$segments_confidence;dim(sound$segments_confidence);class(sound$segments_co
 
 ```{r}
 ######################## Topic Modeling ###########################
+#Pre-processing
+stop_words <- stopwords("SMART")
+stop_words;length(stop_words) #571 unuseful words
+
 # load the lyrics
-load('C:/Users/ch3129/Desktop/Project 4/Project4_data/lyr.Rdata')
+load('C:/Users/celia/Desktop/Project 4/Project4_data/lyr.Rdata')
 ls() #which objects/data are available
 lyr
-lyr[1,] # lyr[,1]=ID
 dim(lyr) # dim=2350 * 5001
+lyr[1,] # lyr[,1]=ID
+lyr[1,1]
+lyr.docnam=lyr[,1];lyr.docnam
+lyr.dt= lyr[,-1];dim(lyr.dt) # 2350 by 5000
+srt1=sort(lyr.dt[1,],decreasing=T)
+srt1[1:20]
 names(lyr) #get the word dictionary
 Dict=as.vector(names(lyr))
 Dic=Dict[-1]
@@ -76,5 +86,73 @@ Dic;length(Dic);Dic[1]==Dict[2]
 #check original text
 # OriLyr=read.table(file.choose(),header=T)
 # OriLyr
+```
+
+```{r}
+# prepare documents 
+
+term.frequency = colSums(lyr.dt)
+term.frequency
+length(term.frequency) #5000
+# sort the frequency
+term.frequency.sort=sort(term.frequency, decreasing=T)
+term.frequency.sort
+head(term.frequency.sort,n=20) # top 20 words
+term.table =term.frequency.sort
+
+# remove terms that are stop words or occur fewer than 5 times:
+del=names(term.table) %in% stop_words | term.table < 5
+del
+term.table=term.table[!del]
+vocab <- names(term.table)           # Vocab: a vector of all words
+vocab
+length(vocab) # length=3914
+length(term.table) #dim=3914
+```
+
+```{r}
+# now put the documents into the format required by the lda package:
+get.terms <- function(x) {
+  index <- match(x, vocab)
+  index <- index[!is.na(index)]
+  rbind(as.integer(index), as.integer(rep(1, length(index))))
+}
+
+lyr.dt[1,];length(lyr.dt) #length=5000
+index_1=which(lyr.dt[1,]!=0)
+name1=Dic[index_1]
+name1
+m1=match(name1,vocab)
+m1
+# test whether true
+vocab[m1]
+index_2=m1[!is.na(m1)]
+index_2
+vocab[index_2]
+rbind(index_2, rep(1,length(index_2)))
+
+# write loops to generate the format for documents
+lyr.dt.n=length(lyr.dt);lyr.dt.n  #5000
+for(i in 1:lyr.dt.n){
+  ind=which(lyr.dt[i,] != 0)  # get all the words from the lyr data that exists in the original text
+  ind1=match()
+  
+}
+
+
+documents <- sapply(lyr.dt, get.terms)
+dim(documents)
+documents[1] 
+names(documents[1])
+class(documents[1])
+length(doc.list_1)
+doc.list_1=unlist(doc.list[1])
+length(doc.list_1)
+document_1=matrix(unlist(documents[1]), nrow=2)
+class(document_1);dim(document_1);document_1[1,]
+index1=document_1[1,]
+index2=match(doc.list_1,vocab)
+index1==index2[!is.na(index2)] #there are words not in the vocaburary 
+
 ```
 
