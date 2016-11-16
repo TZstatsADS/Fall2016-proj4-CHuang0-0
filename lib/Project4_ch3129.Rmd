@@ -128,31 +128,25 @@ m1
 vocab[m1]
 index_2=m1[!is.na(m1)]
 index_2
-vocab[index_2]
+vocab[index_2] #reduced words
 rbind(index_2, rep(1,length(index_2)))
 
 # write loops to generate the format for documents
-lyr.dt.n=length(lyr.dt);lyr.dt.n  #5000
-for(i in 1:lyr.dt.n){
-  ind=which(lyr.dt[i,] != 0)  # get all the words from the lyr data that exists in the original text
-  ind1=match()
-  
-}
+dim(lyr.dt) # 2350 5000
+lyr.dt.nrow=nrow(lyr.dt);lyr.dt.nrow #2350
+vocab;length(vocab) #3914
 
-
-documents <- sapply(lyr.dt, get.terms)
-dim(documents)
-documents[1] 
-names(documents[1])
-class(documents[1])
-length(doc.list_1)
-doc.list_1=unlist(doc.list[1])
-length(doc.list_1)
-document_1=matrix(unlist(documents[1]), nrow=2)
-class(document_1);dim(document_1);document_1[1,]
-index1=document_1[1,]
-index2=match(doc.list_1,vocab)
-index1==index2[!is.na(index2)] #there are words not in the vocaburary 
+#empty a list to store values 
+list1=list();list1
+for(i in 1:lyr.dt.nrow){
+  ind1=which(lyr.dt[i,] != 0)  # get all the words from the lyr data that exists in the original text
+  nam1=Dic[ind1]
+  match_1=match(nam1,vocab)
+  ind2=match_1[!is.na(match_1)]
+  doc1=rbind(ind2, rep(1,length(ind2)))
+  list1[[i]]=doc1
+ }
+list1
 
 ```
 
