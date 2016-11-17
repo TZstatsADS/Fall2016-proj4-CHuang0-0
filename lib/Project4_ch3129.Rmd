@@ -153,7 +153,7 @@ for(i in 1:lyr.dt.nrow){
  }
 list1
 length(list1)
-list1[1]
+list1[[1]];class(list1[[1]]);dim(list1[[1]])
 
 documents=list1
 
@@ -164,7 +164,7 @@ documents=list1
 D <- length(documents)  # number of documents 
 D #2350
 W <- length(vocab)  # number of terms in the vocab 
-W #3914
+W #3888
 doc.length <- sapply(documents, function(x) sum(x[2, ]))  # number of tokens per document [312, 288, 170, 436, 291, ...]
 doc.length
 N <- sum(doc.length)  # total number of tokens in the data (546,827)
@@ -185,16 +185,74 @@ eta <- 0.1
 library(lda)
 set.seed(357)
 t1 <- Sys.time()
-fit <- lda.collapsed.gibbs.sampler(documents = documents, K = K, vocab = vocab, 
+fit <- lda.collapsed.gibbs.sampler(list1, K = K, vocab = vocab, 
                                    num.iterations = G, alpha = alpha, 
                                    eta = eta, initial = NULL, burnin = 0,
                                    compute.log.likelihood = TRUE)
 t2 <- Sys.time()
-t2 - t1  # about 24 minutes on laptop
+t2 - t1  # about 4.011305 minutes on laptop
+
+```
+
+```{r}
+fit
+names(fit) #"assignments"      "topics"           "topic_sums"       "document_sums"    "document_expects" NA                 NA                 NA                 NA                 "log.likelihoods" 
+dim(fit)
+class(fit)
+fit$assignments #each word's topic number
+range(unlist(fit$assignments)) # 0 to 19
+fitassig1=unlist(fit$assignments[1]);length(unlist(fitassig1))
+length(which(fitassig1==0))
+which(vocab=="film")
+
+
+fit$topics
+class(fit$topics) 
+dim(fit$topics)# 20 by 14567
+fit$topics[1,1:10] 
+fit$topics[2,1:10]
+st1=sort(fit$topics[1,], decreasing=T)
+st1[1:20]
+st2=sort(fit$topics[2,], decreasing=T)
+st2[1:20]
+# different topics have different rankings for each word
+
+fit$topic_sums
+fit$topic_sums=unlist(fit$topic_sums)
+length(fit$topic_sums);sum(fit$topic_sums) #546677
+fit$topic_sums[1]==sum(fit$topics[1,]) #TRUE
+# so topic sums are just adding up all the rankings of words in each topics
+
+fit$document_sums
+class(fit$document_sums);dim(fit$document_sums) # 20 by 2000, there are 20 topics and 2000 documents
+sum(fit$document_sums[,1]) # sum of each column is the sum of each document is the doc.length of this document
+fit$document_sums[,1] 
+length(which(fitassig1==0)) == fit$document_sums[1,1] # both 31, TRUE
+# guess each number in each entry is number of words that belong to that topic
+
+fit$document_expects
+class(fit$document_expects);dim(fit$document_expects) # 20 by 2000
+fit$document_expects[,1]
+sum(fit$document_expects[,1]) #1560000
+sum(fit$document_expects[,2]) #1440000
+sum(fit$document_expects[1,]) #269043633
+
+
+fit$log.likelihoods
+dim(fit$log.likelihoods) # 2 by 5000
+
+
+theta <- t(apply(fit$document_sums + alpha, 2, function(x) x/sum(x)))
+phi <- t(apply(t(fit$topics) + eta, 2, function(x) x/sum(x)))
+
+theta;dim(theta) #2350  by  15
+phi;dim(phi) #  15 by 3888
 
 #store results
 write.csv(theta, file = "Theta(para=0.1,15topic).csv",row.names=FALSE)
 write.csv(phi, file = "Phi(para=0.1,15topic).csv",row.names=FALSE)
-
 ```
+
+
+
 
