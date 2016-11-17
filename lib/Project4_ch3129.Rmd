@@ -251,6 +251,7 @@ phi;dim(phi) #  15 by 3888
 #store results
 write.csv(theta, file = "Theta(para=0.1,15topic).csv",row.names=FALSE)
 write.csv(phi, file = "Phi(para=0.1,15topic).csv",row.names=FALSE)
+# also tried other tuning parameters. dont differ much.
 ```
 
 
