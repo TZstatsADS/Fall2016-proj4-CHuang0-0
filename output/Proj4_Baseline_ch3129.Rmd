@@ -1,0 +1,134 @@
+---
+title: "Proj4_Baseline"
+author: "Chenxi Huang (ch3129)"
+date: "November 18, 2016"
+output: html_document
+---
+```{r}
+# set the workng directory 
+setwd("C:/Users/celia/Desktop/Project 4")
+```
+
+```{r}
+# Intro To Dataset
+#Common_id.txt: ids for the songs that have both lyrics and sound analysis information. 2350 in total;
+#lyr.Rdata: dim: 2350*5001. b-o-w for 2350 songs stored in a dataframe;
+#data.zip: .h5 files for the 2350 songs;
+#msm_dataset_train.txt original format of the lyrics data
+```
+
+```{r}
+# Download Packages
+#Reading hdf5 file
+#Download rhdf5 library
+#source("http://bioconductor.org/biocLite.R")
+#biocLite("rhdf5")
+# install missing packages
+list.of.packages <- c("NLP", "tm","lda","LDAvis","slam","rhdf5","servr")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+```
+
+```{r}
+# Load Packages
+library(rhdf5)
+
+# Topic Modeling
+library(NLP)
+library(tm);library(slam)# slam not available for R version 3.2.3
+library(lda)
+library(LDAvis)
+library(servr)
+```
+
+```{r}
+######################## Topic Modeling ###########################
+#Pre-processing
+delcol=c(2,3,6:30)
+delcol2=c(1,2,3,6:30)
+#stop_words <- stopwords("SMART")
+#stop_words;length(stop_words) #571 unuseful words
+
+# load the lyrics
+load('C:/Users/celia/Desktop/Project 4/Project4_data/lyr.Rdata')
+ls() #which objects/data are available
+lyr
+dim(lyr) # dim=2350 * 5001
+lyr[1,] # lyr[,1]=ID
+lyr[1,1]
+lyr.docnam=lyr[,1];lyr.docnam
+lyr.dt= lyr[,-delcol2];dim(lyr.dt) #  2350 by 4973
+srt1=sort(lyr.dt[1,],decreasing=T)
+srt1[1:20]
+names(lyr.dt) #get the word dictionary
+Dic=as.vector(names(lyr.dt))
+Dic;length(Dic) #4973
+
+```
+
+```{r}
+# baseline 
+term.frequency = colSums(lyr.dt)
+term.frequency.sort=sort(term.frequency, decreasing=T)
+baseline.freq=term.frequency.sort
+
+```
+
+```{r}
+#store results
+# recall baseline
+lyr
+Dic.Ori=names(lyr[,-1])
+Dic.Ori;length(Dic.Ori) #5000
+length(baseline.freq) #4973
+delcol=c(2,3,6:30)
+length(delcol) # 27
+delcol.freq=seq((length(baseline.freq)+1),5000);delcol.freq
+delcol.name=Dic.Ori[delcol]
+delcol.name
+base.vec2=cbind(delcol.name,delcol.freq) # assign 4974 to 5000 to deleted columns
+base.vec2;dim(base.vec2) # 27 by 2
+
+# conbine deleted and undeleted columns
+base.vec1=cbind(names(baseline.freq),seq(1:length(Dic)))
+base.vec1;dim(base.vec1) # 4973 by  2
+base.mat=rbind(base.vec1,base.vec2)
+base.mat;dim(base.mat) #500 by 2
+base.mat[1:20,]
+base.index=match(base.mat[,1],Dic.Ori)
+base.index
+Dic.Ori[base.index][1:20]==base.mat[1:20,1] # all true
+# write a loop
+base.orderrank=rep(0,5000);length(base.orderrank)
+for (j in 1:5000){
+  this_index=base.index[j]
+  base.orderrank[this_index]=j
+  }
+base.orderrank
+# check whether correct
+base.orderrank[base.index]==base.mat[,2] #all true
+
+baseline.rank=cbind(Dic.Ori,base.orderrank)
+baseline.rank;dim(baseline.rank)
+baseline.rank[1:20,]
+
+
+# append frequencies into the top words
+base.wordfreq=c(baseline.freq, rep(0,(5000-length(lyr.dt))))
+base.wordfreq;length(base.wordfreq) 
+base.top_freq=cbind(base.mat,base.wordfreq)
+base.top_freq
+base.top_freq=cbind(base.mat,base.wordfreq)
+base.top_freq[1:20,]
+```
+
+```{r}
+# store results
+#CSV
+write.csv(baseline.rank, file = "BaselineRanking.csv",row.names=FALSE)
+write.csv(base.top_freq, file = "Baseline Top Words and Freq.csv",row.names=FALSE)
+# Rdata
+save(baseline.rank, file = "BaselineRanking.RData")
+save(base.top_freq, file = "Baseline Top Words and Freq.RData")
+```
+
