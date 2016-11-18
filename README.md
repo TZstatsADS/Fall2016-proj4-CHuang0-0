@@ -14,14 +14,15 @@ Term: Fall 2016
 + Projec title: Million Song
 + Project summary: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-##############################################################################################################
-+ Findings
 
-+ Baseline Rankings
++ #################################Findings#################################
+
++ 1. Baseline Rankings
 The baseline is determined just by the frequencies of words in the lyr.Rdata. 
 The meaning of it is to:
 
-1) set up a lower bound by assuming all songs have this word distributions, regardless of the music features; 
+1) set up a lower bound by assuming all songs have this word distributions, regardless of the music features;
+
 2) for the benefits of more complicated models, we could compare them with the baseline for future improvement.
 
 	
