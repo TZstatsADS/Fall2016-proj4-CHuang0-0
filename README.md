@@ -31,7 +31,7 @@ After observing the data, we can divided it into two parts: 1) the first part wh
 (2) For example, for the bar_confidence in the "Analysis" group, we can generate compherehensive stats like"vars, n, mean, sd, median, trimmed, mad, min, max, range, skew, kurtosis, se".
 (3) Since the "- /metadata, -/musicbrainz, -/analysis/songs" will not be provided in the test data, I can hard see strong evidence suggesting that I should extract more than 13 subfeatures for each feature. (4) Overall, for the Analysis group, deducting the "songs" part, I have generated 13 * (16-1) = 195 features.
 
-+** Reason and Procedures**
++ **Reason & Procedures**
 + 1. Baseline Model. 
 Baseline model is the simplest model to be compared with other more complex models.
 
