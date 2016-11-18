@@ -18,7 +18,7 @@ Term: Fall 2016
 
 +######################################## My Findings ###############################################
 
-+ 1. Baseline Rankings
++ 1. *Baseline Rankings*
 
 The baseline is determined just by the frequencies of words in the lyr.Rdata. 
 The meaning of it is to:1) set up a lower bound by assuming all songs have this word distributions, regardless of the music features;
