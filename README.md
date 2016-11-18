@@ -41,9 +41,12 @@ Find clusters of features, determine to which cluster each test data belongs, an
 + (3). Topic Modeling. 
 Use Multinomial to see which topics the test data can be allocated to and their weights. Use the word distributions of the topics to determine which words are more prone to occur in the test set. 
 
-+ **Details and Jsutifications**
++ **Details and Justifications**
 + 1. Trimming Down Features
+Since we have 2350 songs in the training set and 195 features, reducing the dimensionality of features is important in terms of shying from overfitting. 
+
 + 2. Cross-Validation
+Cross-Validation here is used to avoid overfitting, as well as an indirect criteria to determine which model is better. 
 
 
 +#################################### **My Findings** ####################################
