@@ -23,6 +23,7 @@ Term: Fall 2016
 The baseline is determined just by the **frequencies** of words in the *lyr.Rdata*. 
 The meaning of it is to:1) set up a lower bound by assuming all songs have the same word distributions, regardless of the music features;
 2) for the benefits of more complicated models, we could compare them with the baseline for future improvement.
+
 So the **Top 20 Words annd their Frequencies** in the Lyr.Rdata is:
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/fig1.png)
 
