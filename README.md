@@ -67,12 +67,7 @@ and after the Cross Validation, **the average error is 190.3119**, which is not 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/baseline_cv1.png)
 
 
-
-
-
-
-
-+#################################### **Future Considerations and Concerns** ####################################
++################################ **Future Considerations and Concerns** ################################
 
 + 1. Features in Analysis$songs, Metadata and Musicbrainz.
 Despite having subtrated the features in these groups, I didn't really use them when it comes to training the set. 
