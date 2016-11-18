@@ -32,13 +32,13 @@ After observing the data, we can divided it into two parts: 1) the first part wh
 (3) Since the "- /metadata, -/musicbrainz, -/analysis/songs" will not be provided in the test data, I can hard see strong evidence suggesting that I should extract more than 13 subfeatures for each feature. (4) Overall, for the Analysis group, deducting the "songs" part, I have generated 13 * (16-1) = 195 features.
 
 + **Reason & Procedures**
-+ 1. Baseline Model. 
++ (1). Baseline Model. 
 Baseline model is the simplest model to be compared with other more complex models.
 
-+ 2. Clustering.
++ (2). Clustering.
 Find clusters of features, determine to which cluster each test data belongs, and assign the frequencies of words in that cluster to that test data.
 
-+ 3. Topic Modeling. 
++ (3). Topic Modeling. 
 Use Multinomial to see which topics the test data can be allocated to and their weights. Use the word distributions of the topics to determine which words are more prone to occur in the test set. 
 
 + **Details and Jsutifications**
