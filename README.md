@@ -46,7 +46,7 @@ Use Multinomial to see which topics the test data can be allocated to and their 
 Since we have 2350 songs in the training set and 195 features, reducing the dimensionality of features is important in terms of shying from overfitting. 
 Considering we are essentially doing unsupervised learning (labels of songs are noncomparable), so PCA seems like a simple and good way to go. 
 
-+ 2. Cross-Validation
++ 2. Cross-Validation (# error = mean(predicted ranks) - mean(actual ranks in the test data))
 Cross-Validation here is used to avoid overfitting, as well as an indirect criteria to determine which model is better. 
 
 
@@ -62,6 +62,9 @@ So the **Top 20 Words annd their Frequencies** in the Lyr.Rdata is:
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/fig1.png)
 
+and after the Cross Validation, **the average error is 190.3119**, which is not bad.
+
+![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/baseline_cv1.png)
 
 
 
