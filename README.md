@@ -42,8 +42,9 @@ Find clusters of features, determine to which cluster each test data belongs, an
 Use Multinomial to see which topics the test data can be allocated to and their weights. Use the word distributions of the topics to determine which words are more prone to occur in the test set. 
 
 + **Details and Justifications**
-+ 1. Trimming Down Features
++ (1). Trimming Down Features: PCA
 Since we have 2350 songs in the training set and 195 features, reducing the dimensionality of features is important in terms of shying from overfitting. 
+Considering we are essentially doing unsupervised learning (labels of songs are noncomparable), so PCA seems like a simple and good way to go. 
 
 + 2. Cross-Validation
 Cross-Validation here is used to avoid overfitting, as well as an indirect criteria to determine which model is better. 
@@ -61,7 +62,20 @@ So the **Top 20 Words annd their Frequencies** in the Lyr.Rdata is:
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/fig1.png)
 
-	
+
+
+
+
+
+
+
++#################################### **Future Considerations** ####################################
+
++ 1. Features in Analysis$songs, Metadata and Musicbrainz.
+Despite having subtrated the features in these groups, I didn't really use them when it comes to training the set. 
+I do have a idea of finding out the correlation between these features so that even in the testing set we don't have such information, we can infer these features from the exisiting features we have in the testing set, through such relations. 
+
+
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
 ```
