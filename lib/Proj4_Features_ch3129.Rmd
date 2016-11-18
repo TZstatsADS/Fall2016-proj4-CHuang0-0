@@ -1,0 +1,142 @@
+---
+title: "Proj4_Features"
+author: "Chenxi Huang (ch3129)"
+date: "November 17, 2016"
+output: html_document
+---
+
+```{r}
+# this R code is used to extract features of the music project
+# set the workng directory 
+setwd("C:/Users/celia/Desktop/Project 4")
+```
+
+```{r}
+# Download Packages
+#Reading hdf5 file
+#Download rhdf5 library
+#source("http://bioconductor.org/biocLite.R")
+#biocLite("rhdf5")
+# install missing packages
+list.of.packages <- c("NLP", "tm","lda","LDAvis","slam","rhdf5","servr","psych")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
+```
+
+```{r}
+# Load Packages
+library(rhdf5)
+# Topic Modeling
+library(NLP)
+library(tm);library(slam)# slam not available for R version 3.2.3
+library(lda)
+library(LDAvis)
+library(servr)
+library(psych)
+```
+
+
+```{r}
+# The structure of a song
+#h5ls("/Users/Bianbian/Documents/Courses/2016Spring/4249_Applied Data Science/Proj5/MillionSongSubset/data/A/A/A/TRAAAAW128F429D538.h5")
+read1=h5ls('C:/Users/celia/Desktop/Project 4/Project4_data/data/A/A/A/TRAAABD128F429CF47.h5') #try out an example
+dim(read1);summary(read1);read1 #dim=27 by 5
+# the data are stored in three groups, analysis, metadata and musicbrainz
+# Get all data using h5read
+sound=h5read("C:/Users/celia/Desktop/Project 4/Project4_data/data/A/A/A/TRAAABD128F429CF47.h5", "/analysis")
+meta=h5read("C:/Users/celia/Desktop/Project 4/Project4_data/data/A/A/A/TRAAABD128F429CF47.h5", "/metadata")
+musicbrainz=h5read("C:/Users/celia/Desktop/Project 4/Project4_data/data/A/A/A/TRAAABD128F429CF47.h5", "/musicbrainz")
+sound
+summary(sound);length(sound)
+meta
+summary(meta)
+musicbrainz
+summary(musicbrainz)
+# for example
+sound$segments_confidence;dim(sound$segments_confidence);class(sound$segments_confidence) 
+summary(sound$segments_confidence);class(summary(sound$segments_confidence))
+mat.segcof=matrix(summary(sound$segments_confidence));mat.segcof
+sound$songs;summary(sound$songs)
+musicbrainz$songs;summary(musicbrainz$songs)
+```
+
+```{r}
+# read al files names
+dir.h5 = './Project4_data/data/'
+files.list = as.matrix(list.files(dir.h5, recursive = TRUE))
+files.list
+n.dt=length(files.list);n.dt#2350
+```
+
+```{r}
+# read three groups of each file
+
+# empty lists 
+list.read=list()
+list.anal=list()
+list.meta=list()
+list.musbra=list()
+
+# looping to get the 3 lists
+t_file.1=Sys.time()
+for(i in 1:n.dt){
+  this_name=sprintf('./Project4_data/data/%s',files.list[i])
+  this_read=h5ls(this_name)
+  this_anal=h5read(this_name, "/analysis")
+  this_meta=h5read(this_name, "/metadata")
+  this_musbra=h5read(this_name, "/musicbrainz")
+  
+  #store in lists
+  list.read[[i]]=this_read
+  list.anal[[i]]=this_anal
+  list.meta[[i]]=this_meta
+  list.musbra[[i]]=this_musbra
+}
+t_file.2=Sys.time()
+# system running time
+t_file.2 - t_file.1 
+# Time difference of 6.742548 mins
+
+```
+
+```{r}
+# let's see the dataframes
+t_df.1=Sys.time()
+list.read;length(list.read)
+list.anal;length(list.anal)
+list.meta;length(list.meta)
+list.musbra;length(list.musbra)
+t_df.2=Sys.time()
+# system running time
+t_df.2 - t_df.1
+
+
+```
+
+```{r}
+# Extract Basic Features 
+
+mat.anal.col=vector()
+mat.anal.row=vector()
+
+name.read=as.vector(list.read[[1]]$name)
+name.anal=name.read[list.read[[1]]=="/analysis"];length(name.anal);name.anal
+name.meta=name.read[list.read[[1]]=="/metadata"];length(name.meta);name.meta
+name.musbra=name.read[list.read[[1]]=="/musicbrainz"];length(name.musbra);name.musbra
+
+# looping to get the feature matrix from Analysis
+for(i in 1:n.dt){
+ for(j in 1:length(name.anal)){
+   
+   this_file=list.anal[[i]]
+   this_feature=name.anal[j]
+   this_file.stat=describe(matrix(this_file[[j]]))
+   this_mat_col=as.matrix(this_file.stat)
+   mat.anal.col=cbind(this_mat_col,mat.anal.col)
+ }
+  mat.anal.row=rbind(mat.anal.col,mat.anal.row)
+}
+
+```
+
