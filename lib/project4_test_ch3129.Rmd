@@ -1,0 +1,126 @@
+---
+title: "Proj4_Test"
+author: "Chenxi Huang (ch3129)"
+date: "November 18, 2016"
+output: html_document
+---
+
+```{r}
+# this R code is used to extract features of the music project
+# set the workng directory 
+setwd("C:/Users/celia/Desktop/Project 4")
+```
+
+```{r}
+# Download Packages
+#Reading hdf5 file
+#Download rhdf5 library
+#source("http://bioconductor.org/biocLite.R")
+#biocLite("rhdf5")
+# install missing packages
+list.of.packages <- c("NLP", "tm","lda","LDAvis","slam","rhdf5","servr","psych")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
+```
+
+```{r}
+# Load Packages
+library(rhdf5)
+# Topic Modeling
+library(NLP)
+library(tm);library(slam)# slam not available for R version 3.2.3
+library(lda)
+library(LDAvis)
+library(servr)
+library(psych)
+```
+
+
+```{r}
+# read al files names
+dir.h5 = './TestSongFile100/'
+files.list.test = as.matrix(list.files(dir.h5, recursive = TRUE))
+files.list.test
+n.d1=length(files.list.test);n.d1#101
+files.list.test=files.list.test[-1]
+```
+
+
+```{r}
+# read three groups of each file
+
+# empty lists 
+list.read.test=list()
+list.anal.test=list()
+
+n.d2=n.d1-1
+n.d2
+
+# looping to get the 3 lists
+t_file.1=Sys.time()
+for(i in 1:n.d2){
+  this_name=sprintf('./TestSongFile100/%s',files.list.test[i])
+  this_read=h5ls(this_name)
+  this_anal=h5read(this_name, "/analysis")
+  
+  list.read.test[[i]]=this_read
+  list.anal.test[[i]]=this_anal
+  
+}
+t_file.2=Sys.time()
+# system running time
+t_file.2 - t_file.1 
+# Time difference of 6.742548 mins
+# Time difference of 6.84165 mins
+```
+
+```{r}
+list.read.test
+list.anal.test
+
+length(list.anal.test)
+```
+
+```{r}
+# Extract Basic Features in the analysis
+
+name.read.test=as.vector(list.read.test[[1]]$name)
+name.anal.test=name.read.test[list.read.test[[1]]=="/analysis"]
+
+
+# looping to get the feature matrix from Analysis
+t.mat.anal.row1=Sys.time()
+mat.anal.row.test=vector()
+for(i in 1:n.d2){
+ mat.anal.col.test=vector()
+ for(j in 1:15){ #no analysis$songs
+   this_file=list.anal.test[[i]]
+   this_file.stat=describe(matrix(this_file[[j]]))
+   this_mat_col=as.matrix(this_file.stat)
+   mat.anal.col.test=c(mat.anal.col.test,this_mat_col) #length 195
+}
+  mat.anal.row.test=rbind(mat.anal.row.test, mat.anal.col.test)
+}
+
+mat.anal.row.test;dim(mat.anal.row.test) # 100 by 195
+
+
+#test whether this is correct
+test.1=rep(0,100)
+for(i in 1:n.d2){
+  this_file=list.anal.test[[i]]
+  this_bar_conf=length(this_file$bars_confidence)
+  test.1[i]=this_bar_conf
+}
+test.1
+
+# whether correct
+test.1==mat.anal.row.test[,2] # all true
+
+# so we have our 195 features
+# save the data
+mat.anal.row.test
+save(mat.anal.row.test,file="195 Analysis features(no songs) for 100 test files.Rdata")
+```
+

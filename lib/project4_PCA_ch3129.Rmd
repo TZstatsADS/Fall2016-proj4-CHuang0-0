@@ -1,0 +1,131 @@
+---
+title: "Projct 4_PCA"
+author: "Chenxi Huang (ch3129)"
+date: "November 18, 2016"
+output: html_document
+---
+```{r}
+# this R code is used to extract features of the music project
+# set the workng directory 
+setwd("C:/Users/celia/Desktop/Project 4")
+```
+
+```{r}
+# Download Packages
+#Reading hdf5 file
+#Download rhdf5 library
+#source("http://bioconductor.org/biocLite.R")
+#biocLite("rhdf5")
+# install missing packages
+list.of.packages <- c("NLP", "tm","lda","LDAvis","slam","rhdf5","servr","psych","FactoMineR")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
+```
+
+```{r}
+# Load Packages
+library(rhdf5)
+# Topic Modeling
+library(NLP)
+library(tm);library(slam)# slam not available for R version 3.2.3
+library(lda)
+library(LDAvis)
+library(servr)
+library(psych)
+library(stats)
+library(FactoMineR)
+
+require(FactoMineR) 
+```
+
+```{r}
+# read al files names
+dir.h5 = './Project4_data/data/'
+files.list = as.matrix(list.files(dir.h5, recursive = TRUE))
+```
+
+```{r}
+# recall the anal features we generated
+load("./195 Analysis features(no songs) for 2350 files.Rdata")
+objects()
+mat.anal.row;dim(mat.anal.row) #2350 by 195
+```
+
+```{r}
+# now we trim down features because 195 features for 2350 songs could easily lead to overfitting
+# we have several options 
+# PCA
+```
+
+```{r}
+mat.anal.feat=mat.anal.row;dim(mat.anal.feat)
+
+# assign 0 to NA terms
+ind.na.feat=which(is.na(mat.anal.feat)==T)
+mat.anal.feat[ind.na.feat]=0
+colMeans(mat.anal.feat)
+
+
+ind.inf.feat=which(abs(colMeans(mat.anal.feat)) == Inf)
+ind.inf.feat #   8   9  10  21  22  23  34  35  36  47  48  49  60  61  62  73  74  75 190 191 192
+
+
+# get rid of inf columns 
+mat.anal.pca.dt=mat.anal.feat[,-ind.inf.feat]
+mat.anal.pca.dt
+colMeans(mat.anal.pca.dt)
+
+mat.anal.pca.dt.cent=scale(mat.anal.pca.dt,center=T, scale=T)
+mat.anal.pca.dt.cent
+which(mat.anal.pca.dt.cent == 0)
+# apply PCA
+# dont scale and center. will lead to inf numbers
+
+mat.anal.feat.pca  = princomp(mat.anal.pca.dt)
+summary(mat.anal.feat.pca )
+plot(mat.anal.feat.pca$scores[1:10] )
+
+```
+
+```{r}
+#compute standard deviation of each principal component
+std_dev <- mat.anal.feat.pca$sdev
+
+#compute variance
+pr_var <- std_dev^2
+
+pr_var
+
+#proportion of variance explained
+prop_varex <- pr_var/sum(pr_var)
+prop_varex[1:20]
+
+
+plot(prop_varex[1:5], xlab = "Principal Component",
+             ylab = "Proportion of Variance Explained",
+             type = "b")
+```
+
+
+```{r}
+
+require(FactoMineR) 
+# PCA with function PCA
+
+
+pca <- PCA(mat.anal.pca.dt, scale.unit=TRUE, ncp=5, graph=T)
+#scale all the features,  ncp: number of dimensions kept in the results (by default 5)
+
+dimdesc(pca)
+#This line of code will sort the variables the most linked to each PC. It is very useful when you have many variables.
+
+
+```
+
+```{r}
+
+inputData <- read.csv("http://rstatistics.net/wp-content/uploads/2015/09/ozone1.csv", stringsAsFactors=F)
+library(party)
+```
+

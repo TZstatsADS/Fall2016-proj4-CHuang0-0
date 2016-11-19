@@ -97,6 +97,7 @@ t_file.2=Sys.time()
 # system running time
 t_file.2 - t_file.1 
 # Time difference of 6.742548 mins
+# Time difference of 6.84165 mins
 
 ```
 
@@ -104,39 +105,150 @@ t_file.2 - t_file.1
 # let's see the dataframes
 t_df.1=Sys.time()
 list.read;length(list.read)
-list.anal;length(list.anal)
+list.anal
+length(list.anal);list.anal[2350]
 list.meta;length(list.meta)
 list.musbra;length(list.musbra)
 t_df.2=Sys.time()
 # system running time
 t_df.2 - t_df.1
-
+# Time difference of 7.987712 mins
 
 ```
 
 ```{r}
-# Extract Basic Features 
-
-mat.anal.col=vector()
-mat.anal.row=vector()
+# Extract Basic Features in the analysis
 
 name.read=as.vector(list.read[[1]]$name)
 name.anal=name.read[list.read[[1]]=="/analysis"];length(name.anal);name.anal
+ind.song=which(name.anal!="songs");ind.song;length(ind.song)
 name.meta=name.read[list.read[[1]]=="/metadata"];length(name.meta);name.meta
 name.musbra=name.read[list.read[[1]]=="/musicbrainz"];length(name.musbra);name.musbra
 
 # looping to get the feature matrix from Analysis
+t.mat.anal.row1=Sys.time()
+mat.anal.row=vector()
 for(i in 1:n.dt){
- for(j in 1:length(name.anal)){
-   
+ mat.anal.col=vector()
+ for(j in 1:length(ind.song)){ #no analysis$songs
    this_file=list.anal[[i]]
-   this_feature=name.anal[j]
    this_file.stat=describe(matrix(this_file[[j]]))
    this_mat_col=as.matrix(this_file.stat)
-   mat.anal.col=cbind(this_mat_col,mat.anal.col)
- }
-  mat.anal.row=rbind(mat.anal.col,mat.anal.row)
+   mat.anal.col=c(mat.anal.col,this_mat_col) #length 195
 }
+  mat.anal.row=rbind(mat.anal.row,mat.anal.col)
+}
+
+t.mat.anal.row2=Sys.time()
+t.mat.anal.row2 - t.mat.anal.row1
+# Time difference of 2.511515 mins
+mat.anal.row;dim(mat.anal.row)
+
+#test whether this is correct
+test.1=rep(0,2350)
+for(i in 1:n.dt){
+  this_file=list.anal[[i]]
+  this_bar_conf=length(this_file$bars_confidence)
+  test.1[i]=this_bar_conf
+}
+test.1
+
+# whether correct
+test.1==mat.anal.row[,2] # all true
+
+# so we have our 195 features
+# save the data
+mat.anal.row
+save(mat.anal.row,file="195 Analysis features(no songs) for 2350 files.Rdata")
+```
+
+```{r}
+# Extract Basic Features in the metadata
+
+name.read=as.vector(list.read[[1]]$name)
+name.musbra=name.read[list.read[[1]]=="/musicbrainz"];length(name.musbra);name.musbra
+
+# looping to get the feature matrix from musbraysis
+t.mat.musbra.row1=Sys.time()
+mat.musbra.row=vector()
+for(i in 1:n.dt){
+ mat.musbra.col=vector()
+ for(j in 1:length(name.musbra)){ #no musbraysis$songs
+   this_file=list.musbra[[i]]
+   this_file.stat=describe(matrix(this_file[[j]]))
+   this_mat_col=as.matrix(this_file.stat)
+   mat.musbra.col=c(mat.musbra.col,this_mat_col) #length 195
+}
+  mat.musbra.row=rbind(mat.musbra.row,mat.musbra.col)
+}
+
+t.mat.musbra.row2=Sys.time()
+t.mat.musbra.row2 - t.mat.musbra.row1
+# Time difference of 2.511515 mins
+mat.musbra.row;dim(mat.musbra.row) #  2350 by  65
+
+#test whether this is correct
+
+test.2=rep(0,2350)
+for(i in 1:n.dt){
+  this_file=list.musbra[[i]]
+  this_artist_terms=length(this_file$artist_terms)
+  test.2[i]= this_artist_terms
+}
+test.2
+
+# whether correct
+test.2==mat.meta.row[,2] # all true
+
+# so we have our 195 features
+# save the data
+mat.musbra.row
+save(mat.musbra.row,file="195 musbraysis features(no songs) for 2350 files.Rdata")
+```
+
+```{r}
+# Extract Basic Features in the musicbrainz
+
+name.read=as.vector(list.read[[1]]$name)
+name.musbra=name.read[list.read[[1]]=="/musbradata"];length(name.musbra);name.musbra
+
+# looping to get the feature matrix from musbraysis
+t.mat.musbra.row1=Sys.time()
+mat.musbra.row=vector()
+for(i in 1:n.dt){
+ mat.musbra.col=vector()
+ for(j in 1:length(name.musbra)){ #no musbraysis$songs
+   this_file=list.musbra[[i]]
+   this_file.stat=describe(matrix(this_file[[j]]))
+   this_mat_col=as.matrix(this_file.stat)
+   mat.musbra.col=c(mat.musbra.col,this_mat_col) #length 195
+}
+  mat.musbra.row=rbind(mat.musbra.row,mat.musbra.col)
+}
+
+t.mat.musbra.row2=Sys.time()
+t.mat.musbra.row2 - t.mat.musbra.row1
+# Time difference of 2.511515 mins
+mat.musbra.row;dim(mat.musbra.row) #  2350 by  65
+
+#test whether this is correct
+
+test.3=rep(0,2350)
+for(i in 1:n.dt){
+  this_file=list.musbra[[i]]
+  this_artist_mbtags=length(this_file$artist_mbtags)
+  test.3[i]= this_artist_mbtags
+}
+test.3
+
+# whether correct
+
+test.3==mat.musbra.row[,2] # all true
+
+# so we have our 195 features
+# save the data
+mat.musbra.row
+save(mat.musbra.row,file="195 musbraysis features(no songs) for 2350 files.Rdata")
 
 ```
 
