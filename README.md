@@ -75,6 +75,20 @@ and after the Cross Validation, **the average error is 190.3119**, which is not 
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/baseline_cv1.png)
 
++ ** 2.Clustering (Unsupervised Learning)**
+
+The clustering model is not hard to interpret. We train the lyr.Rdata to see how we can divide them into several groups.
+
++ KMeans
+I started with Kmeans.
+
+![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/Rplot_clustering_K.jpeg)
+ By observing the initial plot, I decided K can be between 6 to 10. 
+
+Here are the table of # of K groups Vs the groups it signs to the testing data. 
+![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/K%20means%20results.png)
+
+As you can see, I used a "squeeze method" from math. By narrowing down the number of K, (for example, if K=5 is bad, and K=10 is good, then the optimal K lies in between [5,10]), I finally concluded that K=10 is probably the best way to divided this clusters. However, the results is still less than satisfactory.
 
 +################################ **Future Considerations and Concerns** ################################
 
