@@ -12,7 +12,8 @@ Term: Fall 2016
 + Contributor's UNI: ch3129
 
 + Projec title: Million Song
-+ Project summary: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
++ Project Goals: In this project we will explore the association between music features and lyrics words from a subset of songs in the million song data. Association rule minging has a wide range of applications that include marketing research (on co-purchasing), natural language processing, finance, public health and etc. Here the word "rules" is really as general as any interesting and meaningful patterns. Based on the association patterns identified, we will create lyric words recommender algorithms for a piece of music (using its music features).
++ Project summary: After intensive exploring, I tried out three methods. 1. Baseline, 2. Clustering and 3. Topic Modeling. Suprisingly, I conclude that the Baseline Model gives me a better results using Cross Validation. Please see the below for more details.
 
 
 +#################################### **My Thoughts** ####################################
