@@ -53,9 +53,9 @@ However, PCA is reducing dimensionality but not feature selections. It provided 
 Random Forest, along with other classification methods, is also one of my top choices to go. It selects features by their importance. 
 However, it contains a lot of problems, such as the lack of labels and the different scales of my features. I also dropped this after more than one hour of exploring. 
 
-+ (3) Multinomial
 
-+ (4). Cross-Validation (define error = mean(predicted ranks) - mean(actual ranks in the test data))
+
++ (3). Cross-Validation (define error = mean(predicted ranks) - mean(actual ranks in the test data))
 Cross-Validation here is used to avoid overfitting, as well as an indirect criteria to determine which model is better. 
 So far cross-validation has helped me to identify some good methods. But it is also limited by its time-consuming nature. Admittedly, running K=1 or 3 (mostly I ran K=1 because of the dimension of the dataset and the time) could lead to a totally different results as K=5.
 
