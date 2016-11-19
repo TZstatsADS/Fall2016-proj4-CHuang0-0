@@ -30,24 +30,33 @@ After observing the data, we can divided it into two parts: 1) the first part wh
 (1) For each song, within each group, i.e. analysis, metadata and musicbrainz, we calculate the 13 statistics of each covariate, using the describe() in {Psych} package, which is more detailed than the summary() statistics. 
 (2) For example, for the bar_confidence in the "Analysis" group, we can generate compherehensive stats like"vars, n, mean, sd, median, trimmed, mad, min, max, range, skew, kurtosis, se".
 (3) Since the "- /metadata, -/musicbrainz, -/analysis/songs" will not be provided in the test data, I can hard see strong evidence suggesting that I should extract more than 13 subfeatures for each feature. (4) Overall, for the Analysis group, deducting the "songs" part, I have generated 13 * (16-1) = 195 features.
+(4) Feature Selection: will be covered later. See *Details and Justifications*
 
 + **Reason & Procedures**
 + (1). Baseline Model. 
-Baseline model is the simplest model to be compared with other more complex models.
+Baseline model is the simplest model to be compared with other more complex models. It is just determined by the frequencies of words in the lyr.Rdata file.
 
 + (2). Clustering.
-Find clusters of features, determine to which cluster each test data belongs, and assign the frequencies of words in that cluster to that test data.
+Find clusters of features, determine to which cluster each test data belongs, and assign the frequencies of words in that cluster to that test data. Here, I tried K Means clustering. 
 
 + (3). Topic Modeling. 
 Use Multinomial to see which topics the test data can be allocated to and their weights. Use the word distributions of the topics to determine which words are more prone to occur in the test set. 
 
 + **Details and Justifications**
-+ (1). Trimming Down Features: PCA
-Since we have 2350 songs in the training set and 195 features, reducing the dimensionality of features is important in terms of shying from overfitting. 
-Considering we are essentially doing unsupervised learning (labels of songs are noncomparable), so PCA seems like a simple and good way to go. 
++ (1). Dimension Reduction: PCA (considered but abandoned)
+Since we have 2350 songs in the training set and 195 features, reducing the dimensionality of features is important in terms of shying from overfitting. Considering we are essentially doing unsupervised learning (labels of songs are noncomparable), so PCA seems like a simple and good way to go. 
 
-+ 2. Cross-Validation (define error = mean(predicted ranks) - mean(actual ranks in the test data))
+However, PCA is reducing dimensionality but not feature selections. It provided PCA components but not a subset of variables that we would like to have. I abandoned this after I searched for and reading related documents for 2+ hours.
+
++ (2) Feature Selection: Random Forest(considered but abandoned)
+Random Forest, along with other classification methods, is also one of my top choices to go. It selects features by their importance. 
+However, it contains a lot of problems, such as the lack of labels and the different scales of my features. I also dropped this after more than one hour of exploring. 
+
++ (3) Multinomial
+
++ (4). Cross-Validation (define error = mean(predicted ranks) - mean(actual ranks in the test data))
 Cross-Validation here is used to avoid overfitting, as well as an indirect criteria to determine which model is better. 
+So far cross-validation has helped me to identify some good methods. But it is also limited by its time-consuming nature. Admittedly, running K=1 or 3 (mostly I ran K=1 because of the dimension of the dataset and the time) could lead to a totally different results as K=5.
 
 
 +#################################### **My Findings** ####################################
