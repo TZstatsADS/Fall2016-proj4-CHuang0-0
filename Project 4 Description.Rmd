@@ -141,6 +141,6 @@ After observing the data, we can divided it into two parts:
 
 ```
 ```{r}
-![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/fig1.png)
+![](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/fig1.png)
 
 ```
