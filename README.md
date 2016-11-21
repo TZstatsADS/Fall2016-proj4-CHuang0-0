@@ -74,9 +74,13 @@ So the **Top 20 Words annd their Frequencies** in the Lyr.Rdata is:
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/fig1.png)
 
-and after the Cross Validation, **the average error is 190.3119**, which is not bad {(define error = mean(predicted ranks) - mean(actual ranks in the test data))}.
+and I tested several documents using CV, **the average error is 190.3119**, which is not bad {(define error = mean(predicted ranks) - mean(actual ranks in the test data))}.
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/baseline_cv1.png)
+
+But after I used the whole training set and did 1,3,5 fold cross validation, the results are not so good, but pretty consistent. 
+
+![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/baseline%20results%20after%20CV.png)
 
 + **2.Clustering (Unsupervised Learning)**
 
