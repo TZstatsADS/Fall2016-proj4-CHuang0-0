@@ -90,7 +90,8 @@ The clustering model is not hard to interpret. We train the lyr.Rdata to see how
 I started with Kmeans.
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/Rplot_clustering_K.jpeg)
- By observing the initial plot, I decided K can be between 6 to 10. 
+
+By observing the initial plot, I decided K can be between 6 to 10. 
 
 Here are the table of # of K groups Vs the groups it signs to the testing data. 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/how%20to%20choose%20K.png)
