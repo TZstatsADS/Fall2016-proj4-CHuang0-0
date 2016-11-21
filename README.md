@@ -104,6 +104,12 @@ Using Cross Validation to assess this method. Here are the results:
 
 As we can see from the results after 1,3,and 5-fold cross validation, the mean error is generally over 600 (recall I defined the error as the difference between the actual and predicted average ranks regarding related words, same calculating methods as required.) 
 
+But could it be because I chose the wrong K? Let's see the results of K=10 comparing to K=20.
+
+![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/K%20means%20results(CV%2C%20K10%2BK20).png)
+
+Like I expected, when there are 10 clusters, the performance is even worse than the 20 clusters.
+
 Therefore, I don't believe K Means is the best way to go for this problem. 
 
 
