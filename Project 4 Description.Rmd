@@ -116,7 +116,9 @@ After observing the data, we can divided it into two parts:
 
 
 (3). Cross-Validation (define error = mean(predicted ranks) - mean(actual ranks in the test data))
-     Cross-Validation here is used to avoid overfitting, as well as an indirect criteria to determine which model is better. 
+     Cross-Validation here is used to avoid overfitting, 
+     as well as an indirect criteria to determine which model is better.
+     
      So far cross-validation has helped me to identify some good methods. 
      But it is also limited by its time-consuming nature. 
      Admittedly, running K=1 or 3 could lead to a totally different results as K=5.
