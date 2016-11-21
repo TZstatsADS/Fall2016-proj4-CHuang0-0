@@ -1,0 +1,10 @@
+---
+title: "Project 4 Description"
+author: "Chenxi Huang (ch3129)"
+date: "November 20, 2016"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
