@@ -126,8 +126,11 @@ I do have a idea of finding out the correlation between these features so that e
 I used PCA to trim down features. This is flawed in a way because the assumption is that the scales of the numbers don't matter. Although I did normalized my features, I reckon it could still be a problem.
 
 
-+####################################** Thank You for Reading ** ########################################
++##################################** Thank You for Reading ** ###############################
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/just%20like%20fire%20lyric.png)
+
++ (lyrics from P!nk's "Just Like Fire".)
+
 Following [suggestions](http://nicercode.github.io/blog/2013-04-05-projects/) by [RICH FITZJOHN](http://nicercode.github.io/about/#Team) (@richfitz). This folder is orgarnized as follows.
 
 ```
