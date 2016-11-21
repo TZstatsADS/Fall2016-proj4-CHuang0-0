@@ -24,7 +24,10 @@ Contributor UNI: ch3129
 
 Projec title: Million Song
 Project Goals: 
-   In this project we will explore the association between music features and lyrics words from a subset of songs in the million song data. Association rule mining has a wide range of applications that include marketing research (on co-purchasing), natural language processing, finance, public health and etc. Here the word "rules" is really as general as any interesting and meaningful patterns. Based on the association patterns identified, we will create lyric words recommender algorithms for a piece of music (using its music features).
+
+In this project we will explore the association between music features and lyrics words from a subset of songs in the million song data. 
+Association rule mining has a wide range of applications that include marketing research (on co-purchasing), natural language processing, finance, public health and etc. 
+Here the word "rules" is really as general as any interesting and meaningful patterns. Based on the association patterns identified, we will create lyric words recommender algorithms for a piece of music (using its music features).
 
 ```
 
