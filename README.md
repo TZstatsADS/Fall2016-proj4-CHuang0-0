@@ -16,7 +16,7 @@ Term: Fall 2016
 + Project summary: After intensive exploring, I tried out three methods. 1. Baseline, 2. Clustering and 3. Topic Modeling. Suprisingly, I conclude that the Baseline Model gives me a better results using Cross Validation. Please see the below for more details.
 
 + **You can also see my project descriptions here as the RMD version.**
-![](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/Project%204%20Description.Rmd)
+![Data Description](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/Project%204%20Description.Rmd)
 +#################################### **My Thoughts** ####################################
 
 + **The Data**
