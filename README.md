@@ -80,7 +80,7 @@ and I tested several documents using CV, **the average error is 190.3119**, whic
 
 But after I used the whole training set and did 1,3,5 fold cross validation, the results are not so good, but pretty consistent. 
 
-![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/baseline%20results%20after%20CV.png)
+![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/baseline%20cv%20results.png)
 
 + **2.Clustering (Unsupervised Learning)**
 
