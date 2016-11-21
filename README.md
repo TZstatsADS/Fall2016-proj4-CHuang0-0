@@ -109,6 +109,8 @@ Therefore, I don't believe K Means is the best way to go for this problem.
 (3) There are lots of "NA" parts in the information. I had to either wipe out these information or fix them with zeros.
 
 + K Means
+(1) K Means clutering are not doing a good job separating the songs. At most, I got 2-3 clusters which were basically equivalent to the baseline. 
+(2) To perform K Means, I had to make sure that the means of each column for each feature is not infinite (same reason PCA is hard to perform). This forced me to wipe out some columns of features and may caused me to lose important features.
 
 
 
