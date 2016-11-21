@@ -87,7 +87,7 @@ I started with Kmeans.
  By observing the initial plot, I decided K can be between 6 to 10. 
 
 Here are the table of # of K groups Vs the groups it signs to the testing data. 
-![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/how%20to%20choose%20k.jpg)
+![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/how%20to%20choose%20K.png)
 
 As you can see, I used a "squeeze method" from math. By narrowing down the number of K, (for example, if K=5 is bad, and K=10 is good, then the optimal K lies in between [5,10]), I finally concluded that K=20 is probably the best way to divided this clusters. However, the results is still less than satisfactory, beacause there are only two clusters.
 
