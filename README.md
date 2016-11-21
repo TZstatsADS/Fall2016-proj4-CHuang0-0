@@ -51,13 +51,13 @@ However, PCA is reducing dimensionality but not feature selections. It provided 
 
 + (2) Feature Selection: Random Forest(considered but abandoned)
 Random Forest, along with other classification methods, is also one of my top choices to go. It selects features by their importance. 
-However, it contains a lot of problems, such as the lack of labels and the different scales of my features. I also dropped this after more than one hour of exploring. 
+However, it contains a lot of problems, such as the lack of labels and the different scales of my features. I also dropped this after more than hours of exploring. 
 
 
 
 + (3). Cross-Validation (define error = mean(predicted ranks) - mean(actual ranks in the test data))
 Cross-Validation here is used to avoid overfitting, as well as an indirect criteria to determine which model is better. 
-So far cross-validation has helped me to identify some good methods. But it is also limited by its time-consuming nature. Admittedly, running K=1 or 3 (mostly I ran K=1 because of the dimension of the dataset and the time) could lead to a totally different results as K=5.
+So far cross-validation has helped me to identify some good methods. But it is also limited by its time-consuming nature. Admittedly, running K=1 or 3 (mostly I ran K=3 because of the dimension of the dataset and the limited time) could lead to a totally different results as K=5.
 
 
 +#################################### **My Findings** ####################################
@@ -76,11 +76,11 @@ and after the Cross Validation, **the average error is 190.3119**, which is not 
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/baseline_cv1.png)
 
-+ ** 2.Clustering (Unsupervised Learning)**
++ **2.Clustering (Unsupervised Learning)**
 
 The clustering model is not hard to interpret. We train the lyr.Rdata to see how we can divide them into several groups.
 
-+ KMeans
++ KMeans Clustering
 I started with Kmeans.
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/Rplot_clustering_K.jpeg)
@@ -94,6 +94,17 @@ As you can see, I used a "squeeze method" from math. By narrowing down the numbe
 Using Cross Validation to assess this method. Here are the results:
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/K%20means%20results(CV).png)
+
+As we can see from the results after 1,3,and 5-fold cross validation, the mean error is largely over 200 (recall I defined the error as the difference between the actual and predicted average ranks regarding related words, same calculating methods as required.) 
+
+Therefore, I don't believe K Means is the best way to go for this problem. 
+
+
+
++################################ **What Went Wrong?** ################################
+
++ Feature Selection
+(1) Admittedly, I chose a lot of features, 195 for each song. This could easily lead to overfitting. (2)
 
 
 +################################ **Future Considerations and Concerns** ################################
