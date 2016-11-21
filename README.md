@@ -12,7 +12,7 @@ Term: Fall 2016
 + Contributor's UNI: ch3129
 
 + Projec title: Million Song
-+ Project Goals: In this project we will explore the association between music features and lyrics words from a subset of songs in the million song data. Association rule minging has a wide range of applications that include marketing research (on co-purchasing), natural language processing, finance, public health and etc. Here the word "rules" is really as general as any interesting and meaningful patterns. Based on the association patterns identified, we will create lyric words recommender algorithms for a piece of music (using its music features).
++ Project Goals: In this project we will explore the association between music features and lyrics words from a subset of songs in the million song data. Association rule mining has a wide range of applications that include marketing research (on co-purchasing), natural language processing, finance, public health and etc. Here the word "rules" is really as general as any interesting and meaningful patterns. Based on the association patterns identified, we will create lyric words recommender algorithms for a piece of music (using its music features).
 + Project summary: After intensive exploring, I tried out three methods. 1. Baseline, 2. Clustering and 3. Topic Modeling. Suprisingly, I conclude that the Baseline Model gives me a better results using Cross Validation. Please see the below for more details.
 
 
@@ -30,7 +30,7 @@ After observing the data, we can divided it into two parts: 1) the first part wh
 + **Features**
 (1) For each song, within each group, i.e. analysis, metadata and musicbrainz, we calculate the 13 statistics of each covariate, using the describe() in {Psych} package, which is more detailed than the summary() statistics. 
 (2) For example, for the bar_confidence in the "Analysis" group, we can generate compherehensive stats like"vars, n, mean, sd, median, trimmed, mad, min, max, range, skew, kurtosis, se".
-(3) Since the "- /metadata, -/musicbrainz, -/analysis/songs" will not be provided in the test data, I can hard see strong evidence suggesting that I should extract more than 13 subfeatures for each feature. (4) Overall, for the Analysis group, deducting the "songs" part, I have generated 13 * (16-1) = 195 features.
+(3) Since the "- /metadata, -/musicbrainz, -/analysis/songs" will not be provided in the test data, I can hard see strong evidence suggesting that I should extract more than 13 subfeatures for each feature. Overall, for the Analysis group, deducting the "songs" part, I have generated 13 * (16-1) = **195 features**.
 (4) Feature Selection: will be covered later. See *Details and Justifications*
 
 + **Reason & Procedures**
