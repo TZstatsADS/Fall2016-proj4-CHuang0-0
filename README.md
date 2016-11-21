@@ -91,7 +91,9 @@ Here are the table of # of K groups Vs the groups it signs to the testing data.
 
 As you can see, I used a "squeeze method" from math. By narrowing down the number of K, (for example, if K=5 is bad, and K=10 is good, then the optimal K lies in between [5,10]), I finally concluded that K=20 is probably the best way to divided this clusters. However, the results is still less than satisfactory, beacause there are only two clusters.
 
-Using Cross Validation to assess this method.
+Using Cross Validation to assess this method. Here are the results:
+
+![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/K%20means%20results(CV).png)
 
 
 +################################ **Future Considerations and Concerns** ################################
