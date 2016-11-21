@@ -102,7 +102,7 @@ Using Cross Validation to assess this method. Here are the results:
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/K%20means%20results(CV).png)
 
-As we can see from the results after 1,3,and 5-fold cross validation, the mean error is largely over 200 (recall I defined the error as the difference between the actual and predicted average ranks regarding related words, same calculating methods as required.) 
+As we can see from the results after 1,3,and 5-fold cross validation, the mean error is generally over 600 (recall I defined the error as the difference between the actual and predicted average ranks regarding related words, same calculating methods as required.) 
 
 Therefore, I don't believe K Means is the best way to go for this problem. 
 
