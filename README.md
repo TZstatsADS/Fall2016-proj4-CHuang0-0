@@ -18,7 +18,7 @@ Term: Fall 2016
 
 +#################################### **My Thoughts** ####################################
 
-+ **1.The Data**
++ **The Data**
 The million song data is an array of matrices storing three groups of data: Analysis, Metadata and Musicbrainz. For the purpose of the evaluation, "- /metadata, -/musicbrainz, -/analysis/songs" will not be provided in the test data. 
 
 + **The Goal**
@@ -104,7 +104,12 @@ Therefore, I don't believe K Means is the best way to go for this problem.
 +################################ **What Went Wrong?** ################################
 
 + Feature Selection
-(1) Admittedly, I chose a lot of features, 195 for each song. This could easily lead to overfitting. (2)
+(1) Admittedly, I chose a lot of features, 195 for each song. This could easily lead to overfitting. 
+(2) The features I extracted are highly correalted and don't reveal too much information in the "metadata" and "musicbrainz" which we don't have information about in the testing set. But they are good resources of telling who has written these songs and what genres they are. Withouth any additional information to compensate this loss is a big pitfall of this project.
+(3) There are lots of "NA" parts in the information. I had to either wipe out these information or fix them with zeros.
+
++ K Means
+
 
 
 +################################ **Future Considerations and Concerns** ################################
