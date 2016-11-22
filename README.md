@@ -157,7 +157,7 @@ I used PCA to trim down features. This is flawed in a way because the assumption
 
 +################################## **Thank You for Reading** ###############################
 
-![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/just%20like%20fire%20lyric.png)
+    ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/just%20like%20fire%20lyric.png)
 
 + (lyrics from P!nk's "Just Like Fire".)
 
