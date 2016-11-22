@@ -138,11 +138,11 @@ save(base.top_freq, file = "Baseline Top Words and Freq.RData")
 
 ```{r}
 # do cross valudation to see the performance 
-seed(111)
+set.seed(111)
 
 dim(baseline.rank)
 # Do 1 fold CV
-  K=1
+  K=3
   n <- nrow(lyr.dt);n #2350 songs
   n.fold <- floor(n/K); n.fold #783
   s <- sample(rep(1:K, c(rep(n.fold, K-1), n-(K-1)*n.fold)));length(s) #2350
@@ -164,16 +164,23 @@ dim(baseline.rank)
      
     #test.label.rank = rowMeans(test.label)
    
-    pred <- sum(as.numeric(baseline.rank[ the_ind.ori,2]))/length(the_ind)
+    pred <- mean(as.numeric(baseline.rank[ the_ind.ori,2]))
     
-    cv.error[i,j] <- mean(pred - the_test_song.sort.rank)
+    cv.error[i,j] <- mean(pred - the_test_song.sort.rank.mean)
     
     } }
   
+ # mean(the_test_song.sort.rank[the_ind.name]) - mean(as.numeric(baseline.rank[match(the_ind.name,Dic.Ori),2]))
   cv.error
   mean( cv.error) 
+  # K=1,  549.6087
+  # K=3,  549.56
+  # K=5, 549.6087
+  # K=10, 549.6087
+  
   # error = mean(predicted ranks) - mean(actual ranks in the test data)
   #average error is 190.3119
+ 
   
   # store resuls
 write.csv(cv.error, file = "CV_Baseline(k=1).csv",row.names=FALSE)

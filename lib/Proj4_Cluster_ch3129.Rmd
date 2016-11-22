@@ -1,0 +1,489 @@
+---
+title: "Proj4_Trim Features"
+author: "Chenxi Huang (ch3129)"
+date: "November 18, 2016"
+output: html_document
+---
+```{r}
+# this R code is used to extract features of the music project
+# set the workng directory 
+setwd("C:/Users/celia/Desktop/Project 4")
+```
+
+```{r}
+# Download Packages
+#Reading hdf5 file
+#Download rhdf5 library
+#source("http://bioconductor.org/biocLite.R")
+#biocLite("rhdf5")
+# install missing packages
+list.of.packages <- c("NLP", "tm","lda","LDAvis","slam","rhdf5","servr","psych","fpc")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
+```
+
+```{r}
+# Load Packages
+library(rhdf5)
+# Topic Modeling
+library(NLP)
+library(tm);library(slam)# slam not available for R version 3.2.3
+library(lda)
+library(LDAvis)
+library(servr)
+library(psych)
+library(fpc)
+```
+
+```{r}
+# read al files names
+dir.h5 = './Project4_data/data/'
+files.list = as.matrix(list.files(dir.h5, recursive = TRUE))
+```
+
+```{r}
+# read three groups of each file
+# empty lists 
+list.read=list()
+list.anal=list()
+list.meta=list()
+list.musbra=list()
+
+# looping to get the 3 lists
+t_file.1=Sys.time()
+for(i in 1:n.dt){
+  this_name=sprintf('./Project4_data/data/%s',files.list[i])
+  this_read=h5ls(this_name)
+  this_anal=h5read(this_name, "/analysis")
+  this_meta=h5read(this_name, "/metadata")
+  this_musbra=h5read(this_name, "/musicbrainz")
+  
+  #store in lists
+  list.read[[i]]=this_read
+  list.anal[[i]]=this_anal
+  list.meta[[i]]=this_meta
+  list.musbra[[i]]=this_musbra
+}
+t_file.2=Sys.time()
+# system running time
+t_file.2 - t_file.1 
+# Time difference of 6.742548 mins
+# Time difference of 6.84165 mins
+
+```
+
+```{r}
+# Extract Basic Features in the analysis
+name.read=as.vector(list.read[[1]]$name)
+name.anal=name.read[list.read[[1]]=="/analysis"];length(name.anal);name.anal
+ind.song=which(name.anal!="songs");ind.song;length(ind.song)
+
+# looping to get the feature matrix from Analysis
+mat.anal.row=vector()
+for(i in 1:n.dt){
+ mat.anal.col=vector()
+ for(j in 1:length(ind.song)){ #no analysis$songs
+   this_file=list.anal[[i]]
+   this_file.stat=describe(matrix(this_file[[j]]))
+   this_mat_col=as.matrix(this_file.stat)
+   mat.anal.col=c(mat.anal.col,this_mat_col) #length 195
+}
+  mat.anal.row=rbind(mat.anal.row,mat.anal.col)
+}
+# so we have our 195 features
+# save the data
+mat.anal.row
+save(mat.anal.row,file="195 Analysis features(no songs) for 2350 files.Rdata")
+```
+
+```{r}
+# recall the anal features we generated
+load("./195 Analysis features(no songs) for 2350 files.Rdata")
+objects()
+mat.anal.row;dim(mat.anal.row) #2350 by 195
+```
+
+```{r}
+mat.anal.feat=mat.anal.row;dim(mat.anal.feat)
+
+# assign 0 to NA terms
+ind.na.feat=which(is.na(mat.anal.feat)==T)
+mat.anal.feat[ind.na.feat]=0
+colMeans(mat.anal.feat)
+
+
+ind.inf.feat=which(abs(colMeans(mat.anal.feat)) == Inf)
+ind.inf.feat #   8   9  10  21  22  23  34  35  36  47  48  49  60  61  62  73  74  75 190 191 192
+
+
+# get rid of inf columns 
+mat.anal.pca.dt=mat.anal.feat[,-ind.inf.feat]
+mat.anal.pca.dt
+colMeans(mat.anal.pca.dt)
+```
+
+```{r}
+set.seed(111)
+# Determine number of clusters
+mydata=mat.anal.pca.dt
+dim(mat.anal.pca.dt) #174
+wss <- (nrow(mydata)-1)*sum(apply(mydata,2,var))
+for (i in 2:15) wss[i] <- sum(kmeans(mydata, 
+  	centers=i)$withinss)
+plot(1:15, wss, type="b", xlab="Number of Clusters",
+  ylab="Within groups sum of squares", col="pink", main="To Choose K for Clustering",lwd=3)
+
+# 8 to 10 cluster is fine 
+
+```
+
+```{r}
+# K-Means Cluster Analysis
+mydata=mat.anal.pca.dt
+fit.Kmeans <- kmeans(mydata, 10) # 10 cluster solution
+summary(fit.Kmeans)
+# get cluster means 
+aggregate(mydata,by=list(fit.Kmeans$cluster),FUN=mean)
+# append cluster assignment
+mydata.Kmean <- data.frame(mydata, fit.Kmeans$cluster)
+mydata.Kmean
+dim(mydata.Kmean) # 2350 by  175
+
+# so we know that each song is in what group
+```
+
+
+```{r}
+# predict which group
+load("./195 Analysis features(no songs) for 100 test files.Rdata")
+mat.anal.row.test
+mat.anal.row.test[which(is.na(mat.anal.row.test)==T)]=0
+mat.anal.row.test
+
+dim(mat.anal.row.test) #100 by 195
+ind.inf.feat
+
+# get rid of inf columns in the training
+mat.anal.row.test.dt=mat.anal.row.test[,-ind.inf.feat]
+mat.anal.row.test.dt
+dim(mat.anal.row.test.dt) # 100 174
+```
+
+
+```{r}
+# predict which group
+# calculate distances
+
+# define calculating function 
+dist.fun = function(x){
+  d=sqrt(sum(x^2))
+  return(d)
+}
+
+test.group=rep(NA,100)
+test.group2=rep(NA,100)
+for (i in 1:100)
+{
+  dist.mat=abs(mydata.Kmean[,1:174] - mat.anal.row.test.dt[i,])
+  dist.vec=apply(dist.mat,1,dist.fun)
+  dist.vec.sort=mydata.Kmean[order(dist.vec,decreasing=F),]
+  test.group[i]=dist.vec.sort[1,175]
+  test.group2[i]=mydata.Kmean[which.min(dist.vec),175]
+}
+test.group
+test.group2
+test.group==test.group2
+
+summary(test.group==5) # 13 true, 87 false
+summary(test.group==8)
+
+#  K=3 
+#2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+#2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+#K=10 5 7 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 7 5 5 5 5 5 5 5 5 5 7 5 5 5 5 5 5 5 5 7 5 5 5 5 5 5 7 5 5 5 5 5 7 5 5 5 5 5 5 5  5 7 5 5 5 5 5 5 5 5 5 5 5 5 5 5 7 5 5 5 5 7 5 5 7 5 5 7 7 5 5 5 5 5
+# K =5 3333333333333333333333333333333333333333333333333333333333333333333
+# K=20 11 17 14 14 14 11 11 11 14 14 14 11 11 14 14 14 14 14 14 14 11 14 14 14 17 14 11 14 14 11 14 11 14 14 17 11 14 11 11 14 14 14 14 17 14 14 11 11 14 11 17 11 11 14 14 14 17 11 11 11 14 14 14 14 11 17 14 17 14 11 14 14 14 14 11 14 11 14 14 14 11 14 17 14 14 14 14 17 14 14 17 11 11 17 17 14 14 14 14 11
+# K=8, 7777777777777777777
+
+#K=15, 999999 131313131313
+ 
+```
+
+
+```{r}
+# choose K=10, do CV
+# so we have our assigned groups for the test set
+test.group
+sum(test.group==5) #42;
+sum(test.group==15)# 58
+
+mydata.Kmean;dim(mydata.Kmean)
+# which data sets are in these groups?
+ind.KM.5=which(mydata.Kmean[,175]==5)
+ind.KM.15=which(mydata.Kmean[,175]==15)
+ind.KM.5
+ind.KM.15
+
+# get their lyrics
+# recall lyr.dt
+lyr.dt;dim(lyr.dt) # 2350 4973
+lyr.dt.grp5=lyr.dt[ind.KM.5,]
+lyr.dt.grp15=lyr.dt[ind.KM.15,]
+
+lyr.dt.grp5;dim(lyr.dt.grp5) #  81???by 4973
+lyr.dt.grp15;dim(lyr.dt.grp15) # 36 by 4973
+```
+
+```{r}
+# choose K=10, do CV
+# so we have our assigned groups for the test set
+test.group
+sum(test.group==5) #13
+sum(test.group==8)# 87
+
+mydata.Kmean;dim(mydata.Kmean)
+# which data sets are in these groups?
+ind.KM.5=which(mydata.Kmean[,175]==5)
+ind.KM.8=which(mydata.Kmean[,175]==8)
+ind.KM.5
+ind.KM.8
+
+# get their lyrics
+# recall lyr.dt
+lyr.dt;dim(lyr.dt) # 2350 4973
+lyr.dt.grp5=lyr.dt[ind.KM.5,]
+lyr.dt.grp8=lyr.dt[ind.KM.8,]
+
+lyr.dt.grp5;dim(lyr.dt.grp5) #  243???by 4973
+lyr.dt.grp8;dim(lyr.dt.grp8) # 62 by 4973
+
+```
+
+```{r}
+
+# get word frequencies
+lyr.dt.grp5.sum=colMeans(lyr.dt.grp5)
+lyr.dt.grp5.sort=sort(lyr.dt.grp5.sum,decreasing=T)
+lyr.dt.grp5.sort
+lyr.dt.grp5.sort[1:20]
+
+
+lyr.dt.grp15.sum=colMeans(lyr.dt.grp15)
+lyr.dt.grp15.sort=sort(lyr.dt.grp15.sum,decreasing=T)
+lyr.dt.grp15.sort;length(lyr.dt.grp15.sort)
+lyr.dt.grp15.sort[1:20]
+
+# rank
+lyr.dt.grp5.rank = rank(-lyr.dt.grp5.sort)
+lyr.dt.grp15.rank= rank( - lyr.dt.grp15.sort)
+
+
+lyr.dt.grp5.rank;lyr.dt.grp5.rank[1:10]
+lyr.dt.grp15.rank;lyr.dt.grp15.rank[1:10]
+
+```
+
+```{r}
+# get word frequencies
+lyr.dt.grp5.sum=colMeans(lyr.dt.grp5)
+lyr.dt.grp5.sort=sort(lyr.dt.grp5.sum,decreasing=T)
+lyr.dt.grp5.sort
+lyr.dt.grp5.sort[1:20]
+
+
+lyr.dt.grp8.sum=colMeans(lyr.dt.grp8)
+lyr.dt.grp8.sort=sort(lyr.dt.grp8.sum,decreasing=T)
+lyr.dt.grp8.sort;length(lyr.dt.grp8.sort)
+lyr.dt.grp8.sort[1:20]
+
+# rank
+lyr.dt.grp5.rank = rank(-lyr.dt.grp5.sort)
+lyr.dt.grp8.rank= rank( - lyr.dt.grp8.sort)
+
+
+lyr.dt.grp5.rank;lyr.dt.grp5.rank[1:10]
+lyr.dt.grp8.rank;lyr.dt.grp8.rank[1:10]
+```
+
+```{r}
+# assignn ranks to the original dictionary
+# recall Dic.Ori
+Dic.Ori;length(Dic.Ori) #5000
+lyr.dt.grp5.rank.ind=match(names(lyr.dt.grp5.rank),Dic.Ori)
+lyr.dt.grp15.rank.ind=match(names(lyr.dt.grp15.rank),Dic.Ori)
+
+# check 
+Dic.Ori[lyr.dt.grp5.rank.ind] == names(lyr.dt.grp5.rank)
+Dic.Ori[lyr.dt.grp15.rank.ind]==names(lyr.dt.grp15.rank)
+# all true
+```
+
+```{r}
+# assignn ranks to the original dictionary
+# recall Dic.Ori
+Dic.Ori;length(Dic.Ori) #5000
+lyr.dt.grp5.rank.ind=match(names(lyr.dt.grp5.rank),Dic.Ori)
+lyr.dt.grp8.rank.ind=match(names(lyr.dt.grp8.rank),Dic.Ori)
+
+# check 
+Dic.Ori[lyr.dt.grp5.rank.ind] == names(lyr.dt.grp5.rank)
+Dic.Ori[lyr.dt.grp8.rank.ind]==names(lyr.dt.grp8.rank)
+# all true
+```
+
+```{r}
+# write loops to get the ranked dictionary
+
+list.rank.5=rep(NA,5000)
+list.rank.15=rep(NA,5000)
+
+for(i in 1:length(Dic.Ori)){
+  this_index.5=lyr.dt.grp5.rank.ind[i]
+  list.rank.5[this_index.5] =lyr.dt.grp5.rank[i]
+  
+  this_index.15=lyr.dt.grp15.rank.ind[i]
+  list.rank.15[this_index.15] =lyr.dt.grp15.rank[i]
+}
+
+list.rank.5;length(list.rank.5)
+list.rank.15;length(list.rank.5)
+list.rank.5[which(is.na(list.rank.5) == T)]=4987
+list.rank.15[which(is.na(list.rank.15) == T)]=4987
+
+list.rank.5
+sum(list.rank.5) == sum(1:5000) #TRUE
+list.rank.15
+sum(list.rank.15) == sum(1:5000) #TRUE
+
+
+```
+
+```{r}
+# write loops to get the ranked dictionary
+
+list.rank.5=rep(NA,5000)
+list.rank.8=rep(NA,5000)
+
+for(i in 1:length(Dic.Ori)){
+  this_index.5=lyr.dt.grp5.rank.ind[i]
+  list.rank.5[this_index.5] =lyr.dt.grp5.rank[i]
+  
+  this_index.8=lyr.dt.grp8.rank.ind[i]
+  list.rank.8[this_index.8] =lyr.dt.grp8.rank[i]
+}
+
+list.rank.5;length(list.rank.5)
+list.rank.8;length(list.rank.5)
+list.rank.5[which(is.na(list.rank.5) == T)]=4987
+list.rank.8[which(is.na(list.rank.8) == T)]=4987
+
+list.rank.5
+sum(list.rank.5) == sum(1:5000) #TRUE
+list.rank.8
+sum(list.rank.8) == sum(1:5000) #TRUE
+
+```
+
+
+```{r}
+# now predict the test set with these values
+test.group
+ind.grp5_test=which(test.group==5)
+ind.grp5_test
+ind.grp15_test=which(test.group==15)
+ind.grp15_test
+
+sum(ind.grp5_test)+sum(ind.grp15_test) == sum(1:100) #true
+
+```
+
+
+```{r}
+# now predict the test set with these values
+test.group
+ind.grp5_test=which(test.group==5)
+ind.grp5_test
+ind.grp8_test=which(test.group==8)
+ind.grp8_test
+
+sum(ind.grp5_test)+sum(ind.grp8_test) == sum(1:100) #true
+
+```
+
+```{r}
+# store values
+test.pred.mat=matrix(nrow=100,ncol=5000)
+test.pred.mat[ind.grp5_test,]=list.rank.5
+test.pred.mat[ind.grp15_test,]=list.rank.15
+test.pred.mat
+dim(test.pred.mat) #100 by 5000
+
+```
+
+
+```{r}
+# do cross valudation to see the performance 
+set.seed(111)
+
+# Do K fold CV
+ K=5
+# K=1
+# K=3
+# K=10
+ 
+  
+mean( cv.error[i,] )
+mean( cv.error) 
+  # cv.error_1 =  mean( cv.error[i,] )
+ cv.error_2 =  mean( cv.error[i,] )
+ cv.error_3 =  mean( cv.error[i,] )
+ cv.error_4 =  mean( cv.error[i,] )
+ cv.error_5 =  mean( cv.error[i,] )
+ 
+  ### results ##### Kmeans =20 ##########
+  # K=1,i=1, 673.6772
+  # K=3,i=2, 952.7943 
+  # K=3,i=3, 969.5194
+  # k=5, i=1,  752.5631
+  # K=5, i=2, 785.4017
+  # k=5, i=3, 921.3359
+  # K=5, i=4,  747.4215
+  # K=5, i=5, 774.7456
+  
+  ### results ##### Kmeans =10 ##########
+  # K=1,i=1, 2443.312
+  # K=3, i=1, 658.4373
+  # K=3,i=2, 820.7046 
+  # K=3,i=3, 851.1187
+  # k=5, i=1, 821.5007
+  # K=5, i=2, 
+  # k=5, i=3, 
+  # K=5, i=4,  
+  # K=5, i=5, 
+  
+ 
+  # error = mean(predicted ranks) - mean(actual ranks in the test data)
+  #average error is 190.3119
+  
+  # store resuls
+write.csv(cv.error, file = "CV_Baseline(k=1).csv",row.names=FALSE)
+
+```
+
+
+
+```{r}
+
+## see results
+mydata = mat.anal.pca.dt
+# vary parameters for most readable graph
+library(cluster) 
+clusplot(mydata, fit.Kmeans$cluster, shade=TRUE,
+  	labels=2, lines=0)
+
+# Centroid Plot against 1st 2 discriminant functions
+library(fpc)
+plotcluster(mydata, fit.Kmeans$cluster, main="K Means Clustering")
+```
+

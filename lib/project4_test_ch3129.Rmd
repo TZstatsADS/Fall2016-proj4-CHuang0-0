@@ -54,7 +54,7 @@ files.list.test=files.list.test[-1]
 list.read.test=list()
 list.anal.test=list()
 
-n.d2=n.d1-1
+n.d2=n.d1 -1
 n.d2
 
 # looping to get the 3 lists
@@ -122,5 +122,12 @@ test.1==mat.anal.row.test[,2] # all true
 # save the data
 mat.anal.row.test
 save(mat.anal.row.test,file="195 Analysis features(no songs) for 100 test files.Rdata")
+```
+
+
+```{r}
+
+
+
 ```
 

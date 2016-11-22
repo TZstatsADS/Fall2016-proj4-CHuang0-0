@@ -1,0 +1,382 @@
+---
+title: "Hierarchical Clustering"
+author: "Chenxi Huang (ch3129)"
+date: "November 21, 2016"
+output: html_document
+---
+
+```{r}
+# this R code is used to extract features of the music project
+# set the workng directory 
+setwd("C:/Users/celia/Desktop/Project 4")
+```
+
+```{r}
+# Download Packages
+#Reading hdf5 file
+#Download rhdf5 library
+#source("http://bioconductor.org/biocLite.R")
+#biocLite("rhdf5")
+# install missing packages
+list.of.packages <- c("NLP", "tm","lda","LDAvis","slam","rhdf5","servr","psych")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+if(length(new.packages)) install.packages(new.packages)
+
+```
+
+```{r}
+# Load Packages
+library(rhdf5)
+# Topic Modeling
+library(NLP)
+library(tm);library(slam)# slam not available for R version 3.2.3
+library(lda)
+library(LDAvis)
+library(servr)
+library(psych)
+```
+
+```{r}
+# recall the anal features we generated
+load("./195 Analysis features(no songs) for 2350 files.Rdata")
+objects()
+mat.anal.row;dim(mat.anal.row) #2350 by 195
+```
+
+```{r}
+mat.anal.feat=mat.anal.row;dim(mat.anal.feat)
+
+# assign 0 to NA terms
+ind.na.feat=which(is.na(mat.anal.feat)==T)
+mat.anal.feat[ind.na.feat]=0
+colMeans(mat.anal.feat)
+
+
+ind.inf.feat=which(abs(colMeans(mat.anal.feat)) == Inf)
+ind.inf.feat #   8   9  10  21  22  23  34  35  36  47  48  49  60  61  62  73  74  75 190 191 192
+
+
+# get rid of inf columns 
+mat.anal.HC=mat.anal.feat[,-ind.inf.feat]
+mat.anal.HC
+colMeans(mat.anal.HC)
+```
+
+
+
+
+```{r}
+mydata.HC=mat.anal.HC
+# Ward Hierarchical Clustering
+d <- dist(mydata.HC, method = "maximum") # distance matrix
+fit.HC <- hclust(d, method="ward.D") 
+plot(fit.HC, main="Cluster Dendrogram (Method=Maximum)") # display dendogram
+groups <- cutree(fit.HC , k=10) # cut tree into 5 clusters
+# draw dendogram with red borders around the 5 clusters 
+rect.hclust(fit.HC , k=10, border="red")
+
+#  4 - 10 clusters look good
+```
+
+
+```{r}
+# Hierarchical Clustering Statistics
+groups
+length(groups) # 2350
+
+groups.HC=groups
+table(groups.HC)
+```
+
+```{r}
+counts.HC = sapply(2:10,function(ncl)table(cutree(groups.HC,ncl)))
+names(counts.HC) = 2:6
+counts.HC
+
+```
+
+
+```{r}
+# get cluster medians
+aggregate(mydata.HC,by=list(groups.HC),FUN=median)
+# append cluster assignment
+mydata.HC.app <- data.frame(mydata.HC, list(groups.HC))
+mydata.HC.app
+dim(mydata.HC.app) # 2350 by  175
+```
+
+
+
+```{r}
+
+# predict which group
+load("./195 Analysis features(no songs) for 100 test files.Rdata")
+mat.anal.row.test
+mat.anal.row.test[which(is.na(mat.anal.row.test)==T)]=0
+mat.anal.row.test
+
+dim(mat.anal.row.test) #100 by 195
+ind.inf.feat
+
+# get rid of inf columns in the training
+mat.anal.row.test.dt=mat.anal.row.test[,-ind.inf.feat]
+mat.anal.row.test.dt
+dim(mat.anal.row.test.dt) # 100 174
+```
+
+
+```{r}
+# predict which group
+# calculate distances
+set.seed(111)
+# define calculating function 
+dist.fun = function(x){
+  d=sqrt(sum(x^2))
+  return(d)
+}
+
+test.group.HC=rep(NA,100)
+test.group2.HC=rep(NA,100)
+for (i in 1:100)
+{
+  dist.mat=abs(mydata.HC.app[,1:174] - mat.anal.row.test.dt[i,])
+  dist.vec=apply(dist.mat,1,dist.fun)
+  dist.vec.sort=mydata.HC.app[order(dist.vec,decreasing=F),]
+  test.group.HC[i]=dist.vec.sort[1,175]
+  test.group2.HC[i]=mydata.HC.app[which.min(dist.vec),175]
+}
+test.group.HC
+test.group2.HC
+test.group.HC==test.group2.HC #all true
+
+summary(test.group.HC==7) # 13 F, 87 T
+summary(test.group.HC==8) # 13 T, 87 F
+
+#  K=3 
+#2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+#2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2 2
+#K=10 5 7 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 5 7 5 5 5 5 5 5 5 5 5 7 5 5 5 5 5 5 5 5 7 5 5 5 5 5 5 7 5 5 5 5 5 7 5 5 5 5 5 5 5  5 7 5 5 5 5 5 5 5 5 5 5 5 5 5 5 7 5 5 5 5 7 5 5 7 5 5 7 7 5 5 5 5 5
+# K =5 3333333333333333333333333333333333333333333333333333333333333333333
+# K=20 11 17 14 14 14 11 11 11 14 14 14 11 11 14 14 14 14 14 14 14 11 14 14 14 17 14 11 14 14 11 14 11 14 14 17 11 14 11 11 14 14 14 14 17 14 14 11 11 14 11 17 11 11 14 14 14 17 11 11 11 14 14 14 14 11 17 14 17 14 11 14 14 14 14 11 14 11 14 14 14 11 14 17 14 14 14 14 17 14 14 17 11 11 17 17 14 14 14 14 11
+# K=8, 7777777777777777777
+
+#K=15, 999999 131313131313
+
+
+```
+
+
+
+```{r}
+# choose K=10, do CV
+# so we have our assigned groups for the test set
+test.group=test.group.HC
+sum(test.group==7) #87
+sum(test.group==8)# 13
+
+
+# which data sets are in these groups?
+ind.KM.7=which(mydata.HC.app[,175]==7)
+ind.KM.8=which(mydata.HC.app[,175]==8)
+ind.KM.7
+ind.KM.8
+
+# get their lyrics
+# recall lyr.dt
+lyr.dt;dim(lyr.dt) # 2370 4973
+lyr.dt.grp7=lyr.dt[ind.KM.7,]
+lyr.dt.grp8=lyr.dt[ind.KM.8,]
+
+lyr.dt.grp7;
+dim(lyr.dt.grp7) #  72 by 4973
+lyr.dt.grp8;
+dim(lyr.dt.grp8) # 266 by 4973
+```
+
+
+```{r}
+
+# get word frequencies
+lyr.dt.grp7.sum=colMeans(lyr.dt.grp7)
+lyr.dt.grp7.sort=sort(lyr.dt.grp7.sum,decreasing=T)
+lyr.dt.grp7.sort
+lyr.dt.grp7.sort[1:20]
+
+
+lyr.dt.grp8.sum=colMeans(lyr.dt.grp8)
+lyr.dt.grp8.sort=sort(lyr.dt.grp8.sum,decreasing=T)
+lyr.dt.grp8.sort;length(lyr.dt.grp8.sort)
+lyr.dt.grp8.sort[1:20]
+
+# rank
+lyr.dt.grp7.rank = rank(-lyr.dt.grp7.sort)
+lyr.dt.grp8.rank= rank( - lyr.dt.grp8.sort)
+
+
+lyr.dt.grp7.rank;lyr.dt.grp7.rank[1:10]
+lyr.dt.grp8.rank;lyr.dt.grp8.rank[1:10]
+
+```
+
+
+
+```{r}
+# assignn ranks to the original dictionary
+# recall Dic.Ori
+Dic.Ori;length(Dic.Ori) #5000
+lyr.dt.grp7.rank.ind=match(names(lyr.dt.grp7.rank),Dic.Ori)
+lyr.dt.grp8.rank.ind=match(names(lyr.dt.grp8.rank),Dic.Ori)
+
+# check 
+Dic.Ori[lyr.dt.grp7.rank.ind] == names(lyr.dt.grp7.rank)
+Dic.Ori[lyr.dt.grp8.rank.ind]==names(lyr.dt.grp8.rank)
+# all true
+```
+
+```{r}
+# write loops to get the ranked dictionary
+
+list.rank.7=rep(NA,5000)
+list.rank.8=rep(NA,5000)
+
+for(i in 1:length(Dic.Ori)){
+  this_index.7=lyr.dt.grp7.rank.ind[i]
+  list.rank.7[this_index.7] =lyr.dt.grp7.rank[i]
+  
+  this_index.8=lyr.dt.grp8.rank.ind[i]
+  list.rank.8[this_index.8] =lyr.dt.grp8.rank[i]
+}
+
+list.rank.7;length(list.rank.7)
+list.rank.8;length(list.rank.7)
+list.rank.7[which(is.na(list.rank.7) == T)]=4987
+list.rank.8[which(is.na(list.rank.8) == T)]=4987
+
+list.rank.7
+sum(list.rank.7) == sum(1:5000) #TRUE
+list.rank.8
+sum(list.rank.8) == sum(1:5000) #TRUE
+
+
+```
+
+
+
+```{r}
+# now predict the test set with these values
+test.group.HC
+ind.grp7_test=which(test.group==7)
+ind.grp7_test
+ind.grp8_test=which(test.group==8)
+ind.grp8_test
+
+sum(ind.grp7_test)+sum(ind.grp8_test) == sum(1:100) #true
+
+```
+
+
+```{r}
+# store values
+test.pred.mat.HC=matrix(nrow=100,ncol=5000)
+test.pred.mat.HC[ind.grp7_test,]=list.rank.7
+test.pred.mat.HC[ind.grp8_test,]=list.rank.8
+test.pred.mat.HC
+dim(test.pred.mat.HC) #100 by 5000
+
+```
+
+
+```{r}
+
+# do cross valudation to see the performance 
+set.seed(111)
+
+dim(mydata.HC)
+# Do K fold CV
+  K=1
+  n <- nrow(lyr.dt);n #2350 songs
+  n.fold <- floor(n/K); n.fold #783
+  s <- sample(rep(1:K, c(rep(n.fold, K-1), n-(K-1)*n.fold)));length(s) #2350
+  cv.error <- matrix(NA, nrow=K,ncol=n.fold);dim(cv.error)
+  
+  test.group.HC.CV=rep(NA,n.fold)
+  # pred.group=vector()
+  for (i in 1:K){
+    for (j in 1:n.fold){
+      for(h in 1:n.fold){
+        dist.mat=abs(mydata.HC.app[,1:174] - mydata.HC[s == i,])
+        dist.vec=apply(dist.mat,1,dist.fun)
+        dist.vec.sort=mydata.HC.app[order(dist.vec,decreasing=F),]
+        test.group.HC.CV[h]=dist.vec.sort[1,175]
+        test.group.HC.CV # all 7
+      }
+      
+    #train.label <- lyr.dt[s != i,];dim(train.label) #1567 by 4973
+    test.label <- lyr.dt[s == i,];dim(test.label) #784 by 4973
+    the_test_song= test.label[j,];length(the_test_song)
+    the_ind=which( the_test_song != 0)
+    the_ind.name=names(lyr.dt)[the_ind]
+    the_ind.ori=match(the_ind.name,Dic.Ori)
+    
+    the_test_song.sort=sort(the_test_song[the_ind], decreasing=T)
+    the_test_song.sort.rank=rank(-the_test_song.sort) # get the rank of test labels
+    the_test_song.sort.rank.mean=mean(the_test_song.sort.rank)
+     
+    #test.label.rank = rowMeans(test.label)
+    
+    # get the prediction
+   
+    pred.train.groups.ind=which(mydata.HC.app[,175]==test.group.HC.CV[j])
+    pred.train.groups=lyr.dt[pred.train.groups.ind,]
+    pred.train.groups.colmean= colMeans(pred.train.groups)
+    pred.train.groups.sort=sort(pred.train.groups.colmean, decreasing=T)
+    pred.train.groups.rank = rank(-pred.train.groups.sort)
+    pred.train.groups.rank.matchwords= pred.train.groups.rank[the_ind.name]
+      
+    pred <- mean(as.numeric(pred.train.groups.rank.matchwords))
+    
+    cv.error[i,j] <- mean(pred - the_test_song.sort.rank.mean)
+    
+    } 
+    
+    }
+  
+ # mean(the_test_song.sort.rank[the_ind.name]) - mean(as.numeric(baseline.rank[match(the_ind.name,Dic.Ori),2]))
+  cv.error
+  mean( cv.error[i,]) 
+  
+  cv.error_1 = mean(cv.error[i,])
+  cv.error_2 = mean(cv.error[i,])
+  cv.error_3 = mean(cv.error[i,])
+  cv.error_4 = mean(cv.error[i,])
+  cv.error_5 = mean(cv.error[i,])
+ 
+   
+   
+  ### results ##### Kmeans =10 ##########
+  # K=1,i=1, 
+  # K=3, i=1, 670.251
+  # K=3,i=2, 782.7894
+  # K=3,i=3,  807.4677
+  # k=5, i=1, 777.5202
+  # K=5, i=2,  879.2189
+  # k=5, i=3, 778.0394
+  # K=5, i=4,  781.7725
+  # K=5, i=5, 
+  
+  
+ 
+  
+  # store resuls
+#write.csv(cv.error, file = "CV_HC(k=10).csv",row.names=FALSE)
+```
+
+```
+
+
+```{r}
+# comparing 2 cluster solutions
+library(fpc)
+cluster.stats(d, fit.Kmeans$cluster, fit.HC$cluster)
+```
+
