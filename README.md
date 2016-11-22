@@ -134,12 +134,12 @@ Here are the Cross Validation Results (as procedures are similar to K Means, I w
 
 +################################ **What Went Wrong?** ################################
 
-+ Feature Selection
++ **Feature Selection**
 (1) Admittedly, I chose a lot of features, 195 for each song. This could easily lead to overfitting. 
 (2) The features I extracted are highly correalted and don't reveal too much information in the "metadata" and "musicbrainz" which we don't have information about in the testing set. But they are good resources of telling who has written these songs and what genres they are. Withouth any additional information to compensate this loss is a big pitfall of this project.
 (3) There are lots of "NA" parts in the information. I had to either wipe out these information or fix them with zeros.
 
-+ K Means
++ **K Means**
 (1) K Means clutering are not doing a good job separating the songs. At most, I got 2-3 clusters which were basically equivalent to the baseline. 
 (2) To perform K Means, I had to make sure that the means of each column for each feature is not infinite (same reason PCA is hard to perform). This forced me to wipe out some columns of features and may caused me to lose important features.
 
