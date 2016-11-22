@@ -132,6 +132,8 @@ Would Hierarchical Models do better?
 Actually, after fitting the test data into the model, I still found at most 2 clusters can be generated. 
 Here are the Cross Validation Results (as procedures are similar to K Means, I won't overstate the details here.)
 
+![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/HC%20results(CV%2C%20K%3D10).png)
+
 +################################ **What Went Wrong?** ################################
 
 + **Feature Selection**
