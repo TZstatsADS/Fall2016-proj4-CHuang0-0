@@ -88,7 +88,7 @@ But after I used the whole training set and did 1,3,5 fold cross validation, the
 
 The clustering model is not hard to interpret. We train the lyr.Rdata to see how we can divide them into several groups.
 
-+ KMeans Clustering
++ 1)KMeans Clustering
 I started with Kmeans. K-means clustering is the most popular partitioning method. It requires the analyst to specify the number of clusters to extract. 
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/Rplot.jpeg)
@@ -115,6 +115,20 @@ Like I expected, when there are 10 clusters, the performance is even worse than 
 Therefore, I don't believe K Means is the best way to go for this problem. 
 
 
++ 1)Hierarchical Clustering
+I was also wondering, was the high error rates due to the calculating methods of K Means and the "euclidean" distance?
+So I also tried out the Wald Hierarchical Clustering recommended here (http://www.statmethods.net/advstats/cluster.html)
+ 
+First as usual, we look at the graph and choose K. After trying method ="euclidean", "binary" and "maximum", I found the "maximum" method generated okay results. And also to avoid repetitive calculations I did using K Means, I finally decided to use **K=10, Method="Maximum (also known as "Complete")"**.
+ There graphs can justify my choice.
+ 
+ ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/Rplot_K10%2C%20Eucliean.jpeg)
+ ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/Rplot_K10%2CBinary.jpeg)
+ ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/Rplot_K10%2C%20Maximum.jpeg)
+
+Would Hierarchical Models do better?
+Actually, after fitting the test data into the model, I still found at most 2 clusters can be generated. 
+Here are the Cross Validation Results (as procedures are similar to K Means, I won't overstate the details here.)
 
 +################################ **What Went Wrong?** ################################
 
