@@ -134,6 +134,8 @@ Here are the Cross Validation Results (as procedures are similar to K Means, I w
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/HC%20results(CV%2C%20K%3D10).png)
 
+So it turns out that Hierarchical Clustering doesn't do too well either.
+
 +################################ **What Went Wrong?** ################################
 
 + **Feature Selection**
