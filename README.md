@@ -120,12 +120,14 @@ I was also wondering, was the high error rates due to the calculating methods of
 So I also tried out the Wald Hierarchical Clustering recommended here (http://www.statmethods.net/advstats/cluster.html)
  
 First as usual, we look at the graph and choose K. After trying method ="euclidean", "binary" and "maximum", I found the "maximum" method generated okay results. And also to avoid repetitive calculations I did using K Means, I finally decided to use **K=10, Method="Maximum (also known as "Complete")"**.
- There graphs can justify my choice.
+
  
  ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/Rplot_K10%2C%20Eucliean.jpeg)
  ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/Rplot_K10%2CBinary.jpeg)
  ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/Rplot_K10%2C%20Maximum.jpeg)
 
+ The graphs above can justify my choice. "Maximum"'s clusters look nicer.
+ 
 Would Hierarchical Models do better?
 Actually, after fitting the test data into the model, I still found at most 2 clusters can be generated. 
 Here are the Cross Validation Results (as procedures are similar to K Means, I won't overstate the details here.)
