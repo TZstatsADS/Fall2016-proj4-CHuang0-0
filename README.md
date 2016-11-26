@@ -55,7 +55,6 @@ Random Forest, along with other classification methods, is also one of my top ch
 However, it contains a lot of problems, such as the lack of labels and the different scales of my features. I also dropped this after more than hours of exploring. 
 
 
-
 + (3). Cross-Validation (define error = mean(predicted ranks) - mean(actual ranks in the test data))
 Cross-Validation here is used to avoid overfitting, as well as an indirect criteria to determine which model is better. 
 So far cross-validation has helped me to identify some good methods. But it is also limited by its time-consuming nature. Admittedly, running K=1 or 3 (mostly I ran K=3 because of the dimension of the dataset and the limited time) could lead to a totally different results as K=5.
@@ -85,7 +84,7 @@ But after I used the whole training set and did 1,3,5 fold cross validation, the
 
 The clustering model is not hard to interpret. We train the lyr.Rdata to see how we can divide them into several groups.
 
-+ 1)KMeans Clustering
++ 1) **KMeans Clustering**
 I started with Kmeans. K-means clustering is the most popular partitioning method. It requires the analyst to specify the number of clusters to extract. 
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/Rplot.jpeg)
@@ -112,7 +111,7 @@ Like I expected, when there are 10 clusters, the performance is even worse than 
 Therefore, I don't believe K Means is the best way to go for this problem. 
 
 
-+ 1)Hierarchical Clustering
++ 1) **Hierarchical Clustering**
 I was also wondering, was the high error rates due to the calculating methods of K Means and the "euclidean" distance?
 So I also tried out the Wald Hierarchical Clustering recommended here (http://www.statmethods.net/advstats/cluster.html)
  
@@ -134,13 +133,15 @@ Here are the Cross Validation Results (as procedures are similar to K Means, I w
 So it turns out that Hierarchical Clustering doesn't do too well either.
 
 
-+ Topic Modeling
++ **3.Topic Modeling**
+
 I also trained topic modeling in the confidence that instead of trying directly to find relationships bewtween features and predict lyrics, we should find associations between lyrics, classify topics, predict lyrics and use their features' relationships to decide which topics.
 
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/topic%20modeling%20method.png)
 
 Unfortunately, without good clustering, even good classifications of topics won't render good results.
+
 +################################ **What Went Wrong?** ################################
 
 + **Feature Selection**
@@ -155,8 +156,6 @@ Unfortunately, without good clustering, even good classifications of topics won'
 
 + **Hierarchical Clustering**
 (1) To avoid anything unfit for this problem in the nature of K Means, I also used Hierarchical Clustering, even different methods ("maximum"/"complete" instead of "eulidean" as in the K Means, "medium" instead of "mean" when aggregating"). The results are similar to K Means, if not worse. Therefore, I can conclude that either features don't have a strong association with the lyrics, or clustering is not suitable for these sorts of problems, or there was something wrong with my features. 
-
-
 
 
 +################################ **Future Considerations and Concerns** ################################
