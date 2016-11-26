@@ -84,7 +84,7 @@ But after I used the whole training set and did 1,3,5 fold cross validation, the
 
 The clustering model is not hard to interpret. We train the lyr.Rdata to see how we can divide them into several groups.
 
-+ 1) **KMeans Clustering**
++ **(I)KMeans Clustering**
 I started with Kmeans. K-means clustering is the most popular partitioning method. It requires the analyst to specify the number of clusters to extract. 
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/Rplot.jpeg)
@@ -111,7 +111,7 @@ Like I expected, when there are 10 clusters, the performance is even worse than 
 Therefore, I don't believe K Means is the best way to go for this problem. 
 
 
-+ 1) **Hierarchical Clustering**
++ **(II)Hierarchical Clustering**
 I was also wondering, was the high error rates due to the calculating methods of K Means and the "euclidean" distance?
 So I also tried out the Wald Hierarchical Clustering recommended here (http://www.statmethods.net/advstats/cluster.html)
  
