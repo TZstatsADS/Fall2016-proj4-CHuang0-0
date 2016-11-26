@@ -133,16 +133,29 @@ Here are the Cross Validation Results (as procedures are similar to K Means, I w
 
 So it turns out that Hierarchical Clustering doesn't do too well either.
 
+
++ Topic Modeling
+I also trained topic modeling in the confidence that instead of trying directly to find relationships bewtween features and predict lyrics, we should find associations between lyrics, classify topics, predict lyrics and use their features' relationships to decide which topics.
+
+
+![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/topic%20modeling%20method.png)
+
+Unfortunately, without good clustering, even good classifications of topics won't render good results.
 +################################ **What Went Wrong?** ################################
 
 + **Feature Selection**
 (1) Admittedly, I chose a lot of features, 195 for each song. This could easily lead to overfitting. 
 (2) The features I extracted are highly correalted and don't reveal too much information in the "metadata" and "musicbrainz" which we don't have information about in the testing set. But they are good resources of telling who has written these songs and what genres they are. Withouth any additional information to compensate this loss is a big pitfall of this project.
 (3) There are lots of "NA" parts in the information. I had to either wipe out these information or fix them with zeros.
+(4) I also tried to delete the constant columns and that left me with 153 columns of features in total(which is 40 down from the original 195 features) but the clutering results from this seemed to be worse since I could only obtain one cluster for the whole testing set. It doesn't take cross validation for me to know it's not a good direction to go.
 
 + **K Means**
 (1) K Means clutering are not doing a good job separating the songs. At most, I got 2-3 clusters which were basically equivalent to the baseline. 
 (2) To perform K Means, I had to make sure that the means of each column for each feature is not infinite (same reason PCA is hard to perform). This forced me to wipe out some columns of features and may caused me to lose important features.
+
++ **Hierarchical Clustering**
+(1) To avoid anything unfit for this problem in the nature of K Means, I also used Hierarchical Clustering, even different methods ("maximum"/"complete" instead of "eulidean" as in the K Means, "medium" instead of "mean" when aggregating"). The results are similar to K Means, if not worse. Therefore, I can conclude that either features don't have a strong association with the lyrics, or clustering is not suitable for these sorts of problems, or there was something wrong with my features. 
+
 
 
 
