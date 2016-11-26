@@ -160,14 +160,12 @@ Unfortunately, without good clustering, even good classifications of topics won'
 
 +################################ **Future Considerations and Concerns** ################################
 
-+ 1. Features in Analysis$songs, Metadata and Musicbrainz.
++ **1.Features in Analysis$songs, Metadata and Musicbrainz**
 Despite having subtrated the features in these groups, I didn't really use them when it comes to training the set. 
 I do have a idea of finding out the correlation between these features so that even in the testing set we don't have such information, we can infer these features from the exisiting features we have in the testing set, through such relations. 
 
-+ 2. PCA
-I used PCA to trim down features. This is flawed in a way because the assumption is that the scales of the numbers don't matter. Although I did normalized my features, I reckon it could still be a problem.
-
-
++ **2.Feature Selection**
+I imgaed using PCA to trim down features. This is flawed in a way because the assumption is that the scales of the numbers don't matter. Although I did normalized my features, I reckon it could still be a problem beause PCA is dimensionality reduction, not feature selection. Therefore how to select features among 195 generated ones is still something I should work on in the future.
 +################################## **Thank You for Reading** ###############################
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/just%20like%20fire%20lyric.png)
