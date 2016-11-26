@@ -172,7 +172,7 @@ I used PCA to trim down features. This is flawed in a way because the assumption
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/just%20like%20fire%20lyric.png)
 
-+ (lyrics from P!nk's "Just Like Fire".)
++ (lyrics from P!nk's "Just Like Fire", one of my favorite.)
 
 
 +######################################### **The End**###########################################
