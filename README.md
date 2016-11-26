@@ -166,6 +166,8 @@ I do have a idea of finding out the correlation between these features so that e
 
 + **2.Feature Selection**
 I imgaed using PCA to trim down features. This is flawed in a way because the assumption is that the scales of the numbers don't matter. Although I did normalized my features, I reckon it could still be a problem beause PCA is dimensionality reduction, not feature selection. Therefore how to select features among 195 generated ones is still something I should work on in the future.
+
+
 +################################## **Thank You for Reading** ###############################
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/just%20like%20fire%20lyric.png)
