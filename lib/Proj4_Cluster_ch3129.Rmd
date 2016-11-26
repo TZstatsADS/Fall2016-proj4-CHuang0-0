@@ -212,7 +212,6 @@ summary(test.group==8)
 
 
 ```{r}
-# choose K=10, do CV
 # so we have our assigned groups for the test set
 test.group
 sum(test.group==5) #42;
