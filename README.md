@@ -53,7 +53,7 @@ However, PCA is reducing dimensionality but not feature selections. It provided 
 
 + (2) **Feature Selection**: Random Forest(considered but abandoned)
 Random Forest, along with other classification methods, is also one of my top choices to go. It selects features by their importance. 
-However, it contains a lot of problems, such as the lack of labels and the different scales of my features. I also dropped this after more than hours of exploring. 
+However, it contains a lot of problems, such as the lack of labels and the different scales of my features. Moreimportantly, principal component are used as new features, instead of the original variables (which is not ideal here). I also dropped this option after more than hours of exploring. 
 
 
 + (3). **Cross-Validation** (define **error = mean(predicted ranks) - mean(actual ranks in the test data)**)
@@ -178,7 +178,11 @@ Despite having subtrated the features in these groups, I didn't really use them 
 I do have a idea of finding out the correlation between these features so that even in the testing set we don't have such information, we can infer these features from the exisiting features we have in the testing set, through such relations. 
 
 + **2.Feature Selection**
-I imgaed using PCA to trim down features. This is flawed in a way because the assumption is that the scales of the numbers don't matter. Although I did normalized my features, I reckon it could still be a problem beause PCA is dimensionality reduction, not feature selection. Therefore how to select features among 195 generated ones is still something I should work on in the future.
+I imgaed using PCA to trim down features. This is flawed in a way because the assumption is that the scales of the numbers don't matter. Although I did normalized my features, I reckon it could still be a problem beause PCA is dimensionality reduction, not feature selection. 
+
+The problem with using PCA is that (1) measurements from all of the original variables are used in the projection to the lower dimensional space, so here principal component are used as new features, instead of the original variables; (2) only linear relationships are considered, and (3) PCA or SVD-based methods, as well as univariate screening methods (t-test, correlation, etc.), do not take into account the potential multivariate nature of the data structure (e.g., higher order interaction between variables).
+
+Therefore how to select features among 195 generated ones is still something I should work on in the future.
 
 
 
