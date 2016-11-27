@@ -157,7 +157,7 @@ For more information on the final csv I submitted, please refer to [baseline/fin
 
 + **Feature Selection**
 (1) Admittedly, I chose a lot of features, 195 for each song. This could easily lead to overfitting. 
-(2) The features I extracted are highly correalted and don't reveal too much information in the "metadata" and "musicbrainz" which we don't have information about in the testing set. But they are good resources of telling who has written these songs and what genres they are. Withouth any additional information to compensate this loss is a big pitfall of this project.
+(2) The features I extracted are highly correalted and don't reveal too much information in the "metadata" and "musicbrainz" which we don't have information about in the testing set. But they are good resources of telling who has written these songs and what genres they are. Without any additional information to compensate this loss is a big pitfall of this project.
 (3) There are lots of "NA" parts in the information. I had to either wipe out these information or fix them with zeros.
 (4) I also tried to delete the constant columns and that left me with 153 columns of features in total(which is 40 down from the original 195 features) but the clutering results from this seemed to be worse since I could only obtain one cluster for the whole testing set. It doesn't take cross validation for me to know it's not a good direction to go.
 
