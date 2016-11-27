@@ -161,7 +161,7 @@ Unfortunately, without good clustering, even good classifications of topics won'
 +**Final Decision**
 Therefore, incorporating all of the abovementioned findings and results, I finally **decided to use the baseline model** I created.
 
-[baseline prediction](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/output/sample_submission_ch3129(only%20test).csv)
+for more info on the final csv I submitted, please refer to [baseline/final prediction](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/output/sample_submission_ch3129(only%20test).csv)
 
 
 +################################ **Future Considerations and Concerns** ################################
