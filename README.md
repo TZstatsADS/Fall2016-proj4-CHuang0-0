@@ -13,7 +13,7 @@ Term: Fall 2016
 
 + Projec title: Million Song
 + Project Goals: In this project we will explore the association between music features and lyrics words from a subset of songs in the million song data. Association rule mining has a wide range of applications that include marketing research (on co-purchasing), natural language processing, finance, public health and etc. Here the word "rules" is really as general as any interesting and meaningful patterns. Based on the association patterns identified, we will create lyric words recommender algorithms for a piece of music (using its music features).
-+ Project summary: After intensive exploring, I tried out three methods. 1. Baseline, 2. Clustering and 3. Topic Modeling. Suprisingly, I conclude that the Baseline Model gives me a better results using Cross Validation. Please see the below for more details.
++ Project summary: After intensive exploring, I tried out three methods. 1. Baseline, 2. Clustering and 3. Topic Modeling. **Suprisingly, I conclude that the Baseline Model gives me a better results using Cross Validation**. Please see the below for more details.
 
 
 
@@ -55,7 +55,7 @@ Random Forest, along with other classification methods, is also one of my top ch
 However, it contains a lot of problems, such as the lack of labels and the different scales of my features. I also dropped this after more than hours of exploring. 
 
 
-+ (3). Cross-Validation (define error = mean(predicted ranks) - mean(actual ranks in the test data))
++ (3). Cross-Validation (define **error = mean(predicted ranks) - mean(actual ranks in the test data)**)
 Cross-Validation here is used to avoid overfitting, as well as an indirect criteria to determine which model is better. 
 So far cross-validation has helped me to identify some good methods. But it is also limited by its time-consuming nature. Admittedly, running K=1 or 3 (mostly I ran K=3 because of the dimension of the dataset and the limited time) could lead to a totally different results as K=5.
 
@@ -84,7 +84,7 @@ But after I used the whole training set and did 1,3,5 fold cross validation, the
 
 The clustering model is not hard to interpret. We train the lyr.Rdata to see how we can divide them into several groups.
 
-+ **(I)KMeans Clustering**
++ **(I) KMeans Clustering**
 I started with Kmeans. K-means clustering is the most popular partitioning method. It requires the analyst to specify the number of clusters to extract. 
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/Rplot.jpeg)
@@ -111,7 +111,7 @@ Like I expected, when there are 10 clusters, the performance is even worse than 
 Therefore, I don't believe K Means is the best way to go for this problem. 
 
 
-+ **(II)Hierarchical Clustering**
++ **(II) Hierarchical Clustering**
 I was also wondering, was the high error rates due to the calculating methods of K Means and the "euclidean" distance?
 So I also tried out the Wald Hierarchical Clustering recommended here (http://www.statmethods.net/advstats/cluster.html)
  
