@@ -58,7 +58,7 @@ However, it contains a lot of problems, such as the lack of labels and the diffe
 
 + (3). **Cross-Validation** (define **error = mean(predicted ranks) - mean(actual ranks in the test data)**)
 Cross-Validation here is used to avoid overfitting, as well as an indirect criteria to determine which model is better. 
-So far cross-validation has helped me to identify some good methods. But it is also limited by its time-consuming nature. Admittedly, running K=1 or 3 (mostly I ran K=3 because of the dimension of the dataset and the limited time) could lead to a totally different results as K=5.
+So far cross-validation has helped me to identify some good methods. But it is also limited by its time-consuming nature. Admittedly, running K=1 or 3 (mostly I ran K=1,3,5 because of the dimension of the dataset and the limited time) could lead to a totally different results as K=5.
 
 
 
