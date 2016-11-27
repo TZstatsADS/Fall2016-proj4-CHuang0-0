@@ -39,7 +39,7 @@ After observing the data, we can divided it into two parts: 1) the first part wh
 Baseline model is the simplest model to be compared with other more complex models. It is just determined by the frequencies of words in the lyr.Rdata file.
 
 + (2). Clustering.
-Find clusters of features, determine to which cluster each test data belongs, and assign the frequencies of words in that cluster to that test data. Here, I tried K Means clustering. 
+Find clusters of features, determine to which cluster each test data belongs, and assign the frequencies of words in that cluster to that test data. Here, I tried K Means clustering and Hierarchical clustering. 
 
 + (3). Topic Modeling. 
 Use Multinomial to see which topics the test data can be allocated to and their weights. Use the word distributions of the topics to determine which words are more prone to occur in the test set. 
