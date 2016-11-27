@@ -6,6 +6,7 @@
 
 Term: Fall 2016
 
++############################### **Project Introduction** ##############################
 + [Data link](https://courseworks2.columbia.edu/courses/11849/files/folder/Project_Files?preview=763391)-(**courseworks login required**)
 + [Data description](doc/readme.html)
 + Contributor's name: Chenxi Huang
@@ -58,6 +59,7 @@ However, it contains a lot of problems, such as the lack of labels and the diffe
 + (3). **Cross-Validation** (define **error = mean(predicted ranks) - mean(actual ranks in the test data)**)
 Cross-Validation here is used to avoid overfitting, as well as an indirect criteria to determine which model is better. 
 So far cross-validation has helped me to identify some good methods. But it is also limited by its time-consuming nature. Admittedly, running K=1 or 3 (mostly I ran K=3 because of the dimension of the dataset and the limited time) could lead to a totally different results as K=5.
+
 
 
 +#################################### **My Findings** ####################################
@@ -142,6 +144,8 @@ I also trained topic modeling in the confidence that instead of trying directly 
 
 Unfortunately, without good clustering, even good classifications of topics won't render good results.
 
+
+
 +################################ **What Went Wrong?** ################################
 
 + **Feature Selection**
@@ -165,6 +169,7 @@ Therefore, incorporating all of the abovementioned findings and results, I final
 For more information on the final csv I submitted, please refer to [baseline/final prediction](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/output/sample_submission_ch3129(only%20test).csv)
 
 
+
 +################################ **Future Considerations and Concerns** ################################
 
 + **1.Features in Analysis$songs, Metadata and Musicbrainz**
@@ -175,12 +180,14 @@ I do have a idea of finding out the correlation between these features so that e
 I imgaed using PCA to trim down features. This is flawed in a way because the assumption is that the scales of the numbers don't matter. Although I did normalized my features, I reckon it could still be a problem beause PCA is dimensionality reduction, not feature selection. Therefore how to select features among 195 generated ones is still something I should work on in the future.
 
 
+
 +################################## **Thank You for Reading** ###############################
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/just%20like%20fire%20lyric.png)
 
 
 *(lyrics from P!nk's "Just Like Fire", one of my favorite.)*
+
 
 
 +######################################### **The End**###########################################
