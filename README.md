@@ -158,6 +158,12 @@ Unfortunately, without good clustering, even good classifications of topics won'
 (1) To avoid anything unfit for this problem in the nature of K Means, I also used Hierarchical Clustering, even different methods ("maximum"/"complete" instead of "eulidean" as in the K Means, "medium" instead of "mean" when aggregating"). The results are similar to K Means, if not worse. Therefore, I can conclude that either features don't have a strong association with the lyrics, or clustering is not suitable for these sorts of problems, or there was something wrong with my features. 
 
 
++**Final Decision**
+Therefore, incorporating all of the abovementioned findings and results, I finally **decided to use the baseline model** I created.
+
+![baseline prediction](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/output/sample_submission_ch3129(only%20test).csv)
+
+
 +################################ **Future Considerations and Concerns** ################################
 
 + **1.Features in Analysis$songs, Metadata and Musicbrainz**
