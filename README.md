@@ -151,8 +151,8 @@ I also trained topic modeling in the confidence that instead of trying directly 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/topic%20modeling%20method.png)
 
 Unfortunately, without good clustering, even good classifications of topics won't render good results.
-
-
+But for more results on the topics I generated and different affects by different parameters, please refer to 
+[8 csv files for 8 combinations of parameters](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/doc)
 
 + **4. Final Decision**
 
