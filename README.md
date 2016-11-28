@@ -56,9 +56,12 @@ Since we have 2350 songs in the training set and 195 features, reducing the dime
 
 However, PCA is reducing dimensionality but not feature selections. It provided PCA components but not a subset of variables that we would like to have. I abandoned this after I searched for and reading related documents for 2+ hours.
 
-+ (2) **Feature Selection**: Random Forest(considered but abandoned)
-Random Forest, along with other classification methods, is also one of my top choices to go. It selects features by their importance. 
++ (2) **Feature Selection**: Random Forest(considered but abandoned) + Feature Cleaning
+
+(i) Random Forest, along with other classification methods, is also one of my top choices to go. It selects features by their importance. 
 However, it contains a lot of problems, such as the lack of labels and the different scales of my features. Moreimportantly, principal component are used as new features, instead of the original variables (which is not ideal here). I also dropped this option after more than hours of exploring. 
+
+
 
 
 + (3). **Cross-Validation** (define **error = mean(predicted ranks) - mean(actual ranks in the test data)**)
