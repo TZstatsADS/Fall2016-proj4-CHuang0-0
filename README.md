@@ -30,10 +30,15 @@ Our goal for this project is to make recommendations based on the features provi
 After observing the data, we can divided it into two parts: 1) the first part where we find relations among features; 2) the second part where we connect those features with distributions of words in lyr.data.
 
 + **Features**
-(1) For each song, within each group, i.e. analysis, metadata and musicbrainz, we calculate the 13 statistics of each covariate, using the describe() in {Psych} package, which is more detailed than the summary() statistics. 
-(2) For example, for the bar_confidence in the "Analysis" group, we can generate compherehensive stats like"vars, n, mean, sd, median, trimmed, mad, min, max, range, skew, kurtosis, se".
-(3) Since the "- /metadata, -/musicbrainz, -/analysis/songs" will not be provided in the test data, I can hard see strong evidence suggesting that I should extract more than 13 subfeatures for each feature. Overall, for the Analysis group, deducting the "songs" part, I have generated 13 * (16-1) = **195 features**.
+(1) For each song, within each group, i.e. analysis(excluding "$songs"), I calculate the **13 statistics of each covariate**, using the describe() in *{Psych}* package, which is more detailed than the summary() statistics. 
+
+(2) For example, for the bar_confidence in the "Analysis" group, we can generate compherehensive stats like **"vars, n, mean, sd, median, trimmed, mad, min, max, range, skew, kurtosis, se"**. This generated very comprehensive statistics.For example, the bars would inform me whether the song is 2/4, 3/4 or 4/4. Since I am not an expert in music, I decided to leave it to the statistics to decide which ones are important and which not. So I constructed as many features as possible first.
+
+(3) Since the "- /metadata, -/musicbrainz, -/analysis/songs" will not be provided in the test data, I can hardly see strong evidence suggesting that I should extract more subfeatures for each feature. 
+
 (4) Feature Selection: will be covered later. See *Details and Justifications*
+
+Overall, for the Analysis group, deducting the "songs" part, I have generated 13 * (16-1) = **195 features**.
 
 + **Reason & Procedures**
 + (1). **Baseline Model** 
