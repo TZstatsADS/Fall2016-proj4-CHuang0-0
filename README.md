@@ -40,6 +40,8 @@ After observing the data, we can divided it into two parts: 1) the first part wh
 
 Overall, for the Analysis group, deducting the "songs" part, I have generated 13 * (16-1) = **195 features in total**.
 
+
+
 + **Reason & Procedures**
 + (1). **Baseline Model** 
 Baseline model is the simplest model to be compared with other more complex models. It is just determined by the frequencies of words in the lyr.Rdata file.
@@ -56,6 +58,8 @@ Since we have 2350 songs in the training set and 195 features, reducing the dime
 
 However, PCA is reducing dimensionality but not feature selections. It provided PCA components but not a subset of variables that we would like to have. I abandoned this after I searched for and reading related documents for 2+ hours.
 
+
+
 + (2) **Feature Selection**: Random Forest(considered but abandoned) + Feature Cleaning
 
 (i) Random Forest, along with other classification methods, is also one of my top choices to go. It selects features by their importance. 
@@ -64,9 +68,11 @@ However, it contains a lot of problems, such as the lack of labels and the diffe
 (ii) I was also able to reduce **from 195 features to 174** ones by some data processing, e.g. deleting NA columns or columns whose means are INF or -INF (please refer to the document format needed for K means more for details.)
 
 
+
 + (3). **Cross-Validation** (define **error = mean(predicted ranks) - mean(actual ranks in the test data)**)
 Cross-Validation here is used to avoid overfitting, as well as an indirect criteria to determine which model is better. 
 So far cross-validation has helped me to identify some good methods. But it is also limited by its time-consuming nature. Admittedly, running K=1 or 3 (mostly I ran K=1,3,5 because of the dimension of the dataset and the limited time) could lead to a totally different results as K=5.
+
 
 
 
@@ -89,6 +95,8 @@ and I tested 100 training documents using CV, **the average error is 190.3119**,
 But after I used the whole training set and did 1,3,5 fold cross validation, the results are not so good, but pretty consistent. 
 
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/baseline%20cv%20results.png)
+
+
 
 + **2.Clustering (Unsupervised Learning)**
 
@@ -134,6 +142,7 @@ First as usual, we look at the graph and choose K. After trying method ="euclide
 
  The graphs above can justify my choice. "Maximum"'s clusters look nicer.
  
+
 Would Hierarchical Models do better?
 Actually, after fitting the test data into the model, I still found at most 2 clusters can be generated. 
 Here are the Cross Validation Results (as procedures are similar to K Means, I won't overstate the details here.)
@@ -141,6 +150,7 @@ Here are the Cross Validation Results (as procedures are similar to K Means, I w
 ![image](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/figs/HC%20results(CV%2C%20K%3D10).png)
 
 So it turns out that Hierarchical Clustering doesn't do too well either.
+
 
 
 + **3.Topic Modeling**
@@ -154,6 +164,8 @@ Unfortunately, without good clustering, even good classifications of topics won'
 But for more results on the topics I generated and different affects by different parameters, please refer to 
 [8 csv files for 8 combinations of parameters](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/doc)
 
+
+
 + **4. Final Decision**
 
 Therefore, incorporating all of the abovementioned findings and results, I finally **decided to use the baseline model** I created.
@@ -164,17 +176,29 @@ For more information on the final csv I submitted, please refer to [baseline/fin
 +################################ **What Went Wrong?** ################################
 
 + **Feature Selection**
+
 (1) Admittedly, I chose a lot of features, 195 for each song. This could easily lead to overfitting. 
+
 (2) The features I extracted are highly correalted and don't reveal too much information in the "metadata" and "musicbrainz" which we don't have information about in the testing set. But they are good resources of telling who has written these songs and what genres they are. Without any additional information to compensate this loss is a big pitfall of this project.
+
 (3) There are lots of "NA" parts in the information. I had to either wipe out these information or fix them with zeros.
+
 (4) I also tried to delete the constant columns and that left me with 153 columns of features in total(which is 40 down from the original 195 features) but the clutering results from this seemed to be worse since I could only obtain one cluster for the whole testing set. It doesn't take cross validation for me to know it's not a good direction to go.
 
+
+
 + **K Means**
+
 (1) K Means clutering are not doing a good job separating the songs. At most, I got 2-3 clusters which were basically equivalent to the baseline. 
+
 (2) To perform K Means, I had to make sure that the means of each column for each feature is not infinite (same reason PCA is hard to perform). This forced me to wipe out some columns of features and may caused me to lose important features.
 
+
 + **Hierarchical Clustering**
-(1) To avoid anything unfit for this problem in the nature of K Means, I also used Hierarchical Clustering, even different methods ("maximum"/"complete" instead of "eulidean" as in the K Means, "medium" instead of "mean" when aggregating"). The results are similar to K Means, if not worse. Therefore, I can conclude that either features don't have a strong association with the lyrics, or clustering is not suitable for these sorts of problems, or there was something wrong with my features. 
+
+(1) To avoid anything unfit for this problem in the nature of K Means, I also used Hierarchical Clustering, even different methods ("maximum"/"complete" instead of "eulidean" as in the K Means, "medium" instead of "mean" when aggregating"). The results are similar to K Means, if not worse. 
+
+Therefore, it is possible that either features don't have a strong association with the lyrics, or clustering is not suitable for these sorts of problems, or there was something wrong with my features selections. 
 
 
 
@@ -182,13 +206,21 @@ For more information on the final csv I submitted, please refer to [baseline/fin
 +################################ **Future Considerations and Concerns** ################################
 
 + **1.Features in Analysis$songs, Metadata and Musicbrainz**
+
 Despite having subtrated the features in these groups, I didn't really use them when it comes to training the set. 
 I do have a idea of finding out the correlation between these features so that even in the testing set we don't have such information, we can infer these features from the exisiting features we have in the testing set, through such relations. 
+
 
 + **2.Feature Selection**
 I imgaed using PCA to trim down features. This is flawed in a way because the assumption is that the scales of the numbers don't matter. Although I did normalized my features, I reckon it could still be a problem beause PCA is dimensionality reduction, not feature selection. 
 
-The problem with using PCA is that (1) measurements from all of the original variables are used in the projection to the lower dimensional space, so here principal component are used as new features, instead of the original variables; (2) only linear relationships are considered, and (3) PCA or SVD-based methods, as well as univariate screening methods (t-test, correlation, etc.), do not take into account the potential multivariate nature of the data structure (e.g., higher order interaction between variables).
+The problem with using PCA is that 
+
+(1) measurements from all of the original variables are used in the projection to the lower dimensional space, so here principal component are used as new features, instead of the original variables; 
+
+(2) only linear relationships are considered, 
+
+and (3) PCA or SVD-based methods, as well as univariate screening methods (t-test, correlation, etc.), do not take into account the potential multivariate nature of the data structure (e.g., higher order interaction between variables).
 
 Therefore how to select features among 195 generated ones is still something I should work on in the future.
 
