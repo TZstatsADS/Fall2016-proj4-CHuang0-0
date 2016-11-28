@@ -61,7 +61,7 @@ However, PCA is reducing dimensionality but not feature selections. It provided 
 (i) Random Forest, along with other classification methods, is also one of my top choices to go. It selects features by their importance. 
 However, it contains a lot of problems, such as the lack of labels and the different scales of my features. Moreimportantly, principal component are used as new features, instead of the original variables (which is not ideal here). I also dropped this option after more than hours of exploring. 
 
-(ii) I was also able to reduce from 195 features to 174 ones by deleting NA columns or columns whose means are INF or -INF (please refer to the document format needed for K means more for details.)
+(ii) I was also able to reduce **from 195 features to 174** ones by some data processing, e.g. deleting NA columns or columns whose means are INF or -INF (please refer to the document format needed for K means more for details.)
 
 
 + (3). **Cross-Validation** (define **error = mean(predicted ranks) - mean(actual ranks in the test data)**)
