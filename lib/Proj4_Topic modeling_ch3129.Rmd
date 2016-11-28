@@ -1,0 +1,214 @@
+---
+title: "Topic Modeling"
+author: "Chenxi Huang (ch3129)"
+date: "November 27, 2016"
+output: html_document
+---
+
+```{r}
+######################## Topic Modeling ###########################
+#Pre-processing
+delcol=c(2,3,6:30)
+delcol2=c(1,2,3,6:30)
+#stop_words <- stopwords("SMART")
+#stop_words;length(stop_words) #571 unuseful words
+
+# load the lyrics
+load('C:/Users/celia/Desktop/Project 4/Project4_data/lyr.Rdata')
+ls() #which objects/data are available
+lyr
+dim(lyr) # dim=2350 * 5001
+lyr[1,] # lyr[,1]=ID
+lyr[1,1]
+lyr.docnam=lyr[,1];lyr.docnam
+lyr.dt= lyr[,-delcol2];dim(lyr.dt) #  2350 by 4973
+srt1=sort(lyr.dt[1,],decreasing=T)
+srt1[1:20]
+names(lyr.dt) #get the word dictionary
+Dic=as.vector(names(lyr.dt))
+Dic;length(Dic) #4973
+
+#check original text
+# OriLyr=read.table(file.choose(),header=T)
+# OriLyr
+```
+
+```{r}
+# prepare documents 
+
+term.frequency = colSums(lyr.dt)
+term.frequency
+length(term.frequency) #5000
+# sort the frequency
+term.frequency.sort=sort(term.frequency, decreasing=T)
+term.frequency.sort
+head(term.frequency.sort,n=20) # top 20 words
+term.table =term.frequency.sort
+
+# remove terms that are stop words or occur fewer than 5 times:
+#del=names(term.table) %in% stop_words | term.table < 5
+#del
+#term.table=term.table[!del]
+vocab=names(term.table)           # Vocab: a vector of all words
+vocab
+length(vocab) # length= 3888
+length(term.table) #dim= 3888
+```
+
+```{r}
+# baseline 
+term.frequency = colSums(lyr.dt)
+term.frequency.sort=sort(term.frequency, decreasing=T)
+baseline.freq=term.frequency.sort
+
+```
+
+```{r}
+# now put the documents into the format required by the lda package:
+get.terms <- function(x) {
+  index <- match(x, vocab)
+  index <- index[!is.na(index)]
+  rbind(as.integer(index-1), as.integer(rep(1, length(index))))
+}
+
+lyr.dt[1,];dim(lyr.dt) #dim=2350 by 4973
+index_1=which(lyr.dt[1,]!=0)
+name1=Dic[index_1]
+name1
+m1=match(name1,vocab)
+m1
+# test whether true
+vocab[m1]
+index_2=m1[!is.na(m1)]
+index_2
+vocab[index_2] #reduced words
+lyr.dt[1,][vocab[index_2]] # number of times of each word in the document 
+mat1=matrix(rbind(index_2, rep(1,length(index_2))))
+class(mat1)
+
+# write loops to generate the format for documents
+dim(lyr.dt) # 2350 by 4973
+lyr.dt.nrow=nrow(lyr.dt);lyr.dt.nrow #2350
+vocab;length(vocab) # 4973
+
+#empty a list to store values 
+list1=list();list1
+tt1=Sys.time()
+for(i in 1:lyr.dt.nrow){
+  lyr1=lyr.dt[i,]
+  ind1=which(lyr1!= 0)  # get all the words from the lyr data that exists in the original text
+  nam1=Dic[ind1]
+  match_1=match(nam1,vocab)
+  ind2=match_1[!is.na(match_1)]
+  word_times1=lyr1[vocab[ind2]]
+  doc1=rbind(as.integer(ind2-1), as.integer(word_times1))
+  list1[[i]]=doc1
+}
+tt2=Sys.time()
+tt2-tt1
+# looping takes 6.241704 mins
+list1
+length(list1)
+list1[[1]];class(list1[[1]]);dim(list1[[1]])
+
+documents=list1
+
+```
+
+```{r}
+# Compute some statistics related to the data set:
+D <- length(documents)  # number of documents 
+D #2350
+W <- length(vocab)  # number of terms in the vocab 
+W #4973
+doc.length <- sapply(documents, function(x) sum(x[2, ]))  # number of tokens per document [312, 288, 170, 436, 291, ...]
+doc.length
+N <- sum(doc.length)  # total number of tokens in the data (546,827)
+N #545313
+term.frequency <- as.integer(term.table)  # frequencies of terms in the corpus [8939, 5544, 2411, 2410, 2143, 
+term.frequency
+
+```
+
+```{r}
+# MCMC and model tuning parameters:
+K <- 20
+G <- 5000
+alpha <- 0.02
+eta <- 0.02
+
+# Fit the model:
+library(lda)
+set.seed(111)
+t1 <- Sys.time()
+fit <- lda.collapsed.gibbs.sampler(list1, K = K, vocab = vocab, 
+                                   num.iterations = G, alpha = alpha, 
+                                   eta = eta, initial = NULL, burnin = 0,
+                                   compute.log.likelihood = TRUE)
+t2 <- Sys.time()
+t2 - t1  
+# tuning=0.1,topic=15, about 6.114659 mins on laptop
+# tuning=0.1,topic=15, about 7.546881 mins on laptop
+
+
+```
+
+```{r}
+fit
+names(fit) #"assignments"      "topics"           "topic_sums"       "document_sums"    "document_expects" NA                 NA                 NA                 NA                 "log.likelihoods" 
+dim(fit)
+class(fit)
+fit$assignments #each word's topic number
+range(unlist(fit$assignments)) # 0 to 19
+fitassig1=unlist(fit$assignments[1]);length(unlist(fitassig1))
+length(which(fitassig1==0))
+which(vocab=="film")
+
+
+fit$topics
+class(fit$topics) 
+dim(fit$topics)# 20 by 14567
+fit$topics[1,1:10] 
+fit$topics[2,1:10]
+st1=sort(fit$topics[1,], decreasing=T)
+st1[1:20]
+st2=sort(fit$topics[2,], decreasing=T)
+st2[1:20]
+# different topics have different rankings for each word
+
+fit$topic_sums
+fit$topic_sums=unlist(fit$topic_sums)
+length(fit$topic_sums);sum(fit$topic_sums) #546677
+fit$topic_sums[1]==sum(fit$topics[1,]) #TRUE
+# so topic sums are just adding up all the rankings of words in each topics
+
+fit$document_sums
+class(fit$document_sums);dim(fit$document_sums) # 20 by 2000, there are 20 topics and 2000 documents
+sum(fit$document_sums[,1]) # sum of each column is the sum of each document is the doc.length of this document
+fit$document_sums[,1] 
+length(which(fitassig1==0)) == fit$document_sums[1,1] # both 31, TRUE
+# guess each number in each entry is number of words that belong to that topic
+
+fit$document_expects
+class(fit$document_expects);dim(fit$document_expects) # 20 by 2000
+fit$document_expects[,1]
+sum(fit$document_expects[,1]) #1560000
+sum(fit$document_expects[,2]) #1440000
+sum(fit$document_expects[1,]) #269043633
+
+
+fit$log.likelihoods
+dim(fit$log.likelihoods) # 2 by 5000
+
+
+theta <- t(apply(fit$document_sums + alpha, 2, function(x) x/sum(x)))
+phi <- t(apply(t(fit$topics) + eta, 2, function(x) x/sum(x)))
+
+theta;dim(theta) #2350  by  15
+phi;dim(phi) #  15 by 3888
+
+# store results
+write.csv(theta, file = "Theta(para=0.02,20topic,withsmart).csv",row.names=FALSE)
+write.csv(phi, file = "Phi(para=0.02,20topic,withsmart).csv",row.names=FALSE)
+
+```
