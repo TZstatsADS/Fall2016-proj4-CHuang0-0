@@ -234,30 +234,6 @@ lyr.dt.grp5;dim(lyr.dt.grp5) #  81???by 4973
 lyr.dt.grp15;dim(lyr.dt.grp15) # 36 by 4973
 ```
 
-```{r}
-# choose K=10, do CV
-# so we have our assigned groups for the test set
-test.group
-sum(test.group==5) #13
-sum(test.group==8)# 87
-
-mydata.Kmean;dim(mydata.Kmean)
-# which data sets are in these groups?
-ind.KM.5=which(mydata.Kmean[,175]==5)
-ind.KM.8=which(mydata.Kmean[,175]==8)
-ind.KM.5
-ind.KM.8
-
-# get their lyrics
-# recall lyr.dt
-lyr.dt;dim(lyr.dt) # 2350 4973
-lyr.dt.grp5=lyr.dt[ind.KM.5,]
-lyr.dt.grp8=lyr.dt[ind.KM.8,]
-
-lyr.dt.grp5;dim(lyr.dt.grp5) #  243???by 4973
-lyr.dt.grp8;dim(lyr.dt.grp8) # 62 by 4973
-
-```
 
 ```{r}
 
@@ -283,27 +259,7 @@ lyr.dt.grp15.rank;lyr.dt.grp15.rank[1:10]
 
 ```
 
-```{r}
-# get word frequencies
-lyr.dt.grp5.sum=colMeans(lyr.dt.grp5)
-lyr.dt.grp5.sort=sort(lyr.dt.grp5.sum,decreasing=T)
-lyr.dt.grp5.sort
-lyr.dt.grp5.sort[1:20]
 
-
-lyr.dt.grp8.sum=colMeans(lyr.dt.grp8)
-lyr.dt.grp8.sort=sort(lyr.dt.grp8.sum,decreasing=T)
-lyr.dt.grp8.sort;length(lyr.dt.grp8.sort)
-lyr.dt.grp8.sort[1:20]
-
-# rank
-lyr.dt.grp5.rank = rank(-lyr.dt.grp5.sort)
-lyr.dt.grp8.rank= rank( - lyr.dt.grp8.sort)
-
-
-lyr.dt.grp5.rank;lyr.dt.grp5.rank[1:10]
-lyr.dt.grp8.rank;lyr.dt.grp8.rank[1:10]
-```
 
 ```{r}
 # assignn ranks to the original dictionary
@@ -318,18 +274,6 @@ Dic.Ori[lyr.dt.grp15.rank.ind]==names(lyr.dt.grp15.rank)
 # all true
 ```
 
-```{r}
-# assignn ranks to the original dictionary
-# recall Dic.Ori
-Dic.Ori;length(Dic.Ori) #5000
-lyr.dt.grp5.rank.ind=match(names(lyr.dt.grp5.rank),Dic.Ori)
-lyr.dt.grp8.rank.ind=match(names(lyr.dt.grp8.rank),Dic.Ori)
-
-# check 
-Dic.Ori[lyr.dt.grp5.rank.ind] == names(lyr.dt.grp5.rank)
-Dic.Ori[lyr.dt.grp8.rank.ind]==names(lyr.dt.grp8.rank)
-# all true
-```
 
 ```{r}
 # write loops to get the ranked dictionary
@@ -358,31 +302,6 @@ sum(list.rank.15) == sum(1:5000) #TRUE
 
 ```
 
-```{r}
-# write loops to get the ranked dictionary
-
-list.rank.5=rep(NA,5000)
-list.rank.8=rep(NA,5000)
-
-for(i in 1:length(Dic.Ori)){
-  this_index.5=lyr.dt.grp5.rank.ind[i]
-  list.rank.5[this_index.5] =lyr.dt.grp5.rank[i]
-  
-  this_index.8=lyr.dt.grp8.rank.ind[i]
-  list.rank.8[this_index.8] =lyr.dt.grp8.rank[i]
-}
-
-list.rank.5;length(list.rank.5)
-list.rank.8;length(list.rank.5)
-list.rank.5[which(is.na(list.rank.5) == T)]=4987
-list.rank.8[which(is.na(list.rank.8) == T)]=4987
-
-list.rank.5
-sum(list.rank.5) == sum(1:5000) #TRUE
-list.rank.8
-sum(list.rank.8) == sum(1:5000) #TRUE
-
-```
 
 
 ```{r}
@@ -398,17 +317,6 @@ sum(ind.grp5_test)+sum(ind.grp15_test) == sum(1:100) #true
 ```
 
 
-```{r}
-# now predict the test set with these values
-test.group
-ind.grp5_test=which(test.group==5)
-ind.grp5_test
-ind.grp8_test=which(test.group==8)
-ind.grp8_test
-
-sum(ind.grp5_test)+sum(ind.grp8_test) == sum(1:100) #true
-
-```
 
 ```{r}
 # store values
@@ -430,7 +338,9 @@ set.seed(111)
 # K=1
 # K=3
 # K=10
- 
+
+##### I lost this code block but it is similar to what I did in hierarchical clustering###### 
+########### please see HC for more details on the code ###############################
   
 mean( cv.error[i,] )
 mean( cv.error) 
