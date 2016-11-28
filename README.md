@@ -21,15 +21,22 @@ Term: Fall 2016
 +#################################### **My Thoughts** ####################################
 
 + **The Data**
+
 The million song data is an array of matrices storing three groups of data: Analysis, Metadata and Musicbrainz. For the purpose of the evaluation, "- /metadata, -/musicbrainz, -/analysis/songs" will not be provided in the test data. 
 
+
 + **The Goal**
+
 Our goal for this project is to make recommendations based on the features provided for each song, to determine which words are more likely to occur in this song and finally give ranks to all words in the Dictionary given. 
 
+
 + **What Problem?**
+
 After observing the data, we can divided it into two parts: 1) the first part where we find relations among features; 2) the second part where we connect those features with distributions of words in lyr.data.
 
+
 + **Features**
+
 (1) For each song, within each group, i.e. analysis(excluding "$songs"), I calculate the **13 statistics of each covariate**, using the describe() in *{Psych}* package, which is more detailed than the summary() statistics. 
 
 (2) For example, for the bar_confidence in the "Analysis" group, we can generate compherehensive stats like **"vars, n, mean, sd, median, trimmed, mad, min, max, range, skew, kurtosis, se"**. This generated very comprehensive statistics.For example, the bars would inform me whether the song is 2/4, 3/4 or 4/4. Since I am not an expert in music, I decided to leave it to the statistics to decide which ones are important and which not. So I constructed as many features as possible first.
@@ -41,15 +48,19 @@ After observing the data, we can divided it into two parts: 1) the first part wh
 Overall, for the Analysis group, deducting the "songs" part, I have generated 13 * (16-1) = **195 features in total**.
 
 
-
 + **Reason & Procedures**
 + (1). **Baseline Model** 
+
 Baseline model is the simplest model to be compared with other more complex models. It is just determined by the frequencies of words in the lyr.Rdata file.
 
+
 + (2). **Clustering**
+
 Find clusters of features, determine to which cluster each test data belongs, and assign the frequencies of words in that cluster to that test data. Here, I tried K Means clustering and Hierarchical clustering. 
 
+
 + (3). **Topic Modeling**
+
 Use Multinomial to see which topics the test data can be allocated to and their weights. Use the word distributions of the topics to determine which words are more prone to occur in the test set. 
 
 + **Details and Justifications**
@@ -212,6 +223,7 @@ I do have a idea of finding out the correlation between these features so that e
 
 
 + **2.Feature Selection**
+
 I imgaed using PCA to trim down features. This is flawed in a way because the assumption is that the scales of the numbers don't matter. Although I did normalized my features, I reckon it could still be a problem beause PCA is dimensionality reduction, not feature selection. 
 
 The problem with using PCA is that 
