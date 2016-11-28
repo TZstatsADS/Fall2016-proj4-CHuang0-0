@@ -327,10 +327,3 @@ base.top_freq[1:20,]
 write.csv(baseline.rank, file = "BaselineRanking.csv",row.names=FALSE)
 write.csv(base.top_freq, file = "Baseline Top Words and Freq.csv",row.names=FALSE)
 ```
-
-
-```{r}
-
-
-```
-
