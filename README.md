@@ -38,7 +38,7 @@ After observing the data, we can divided it into two parts: 1) the first part wh
 
 (4) Feature Selection: will be covered later. See *Details and Justifications*
 
-Overall, for the Analysis group, deducting the "songs" part, I have generated 13 * (16-1) = **195 features**.
+Overall, for the Analysis group, deducting the "songs" part, I have generated 13 * (16-1) = **195 features in total**.
 
 + **Reason & Procedures**
 + (1). **Baseline Model** 
