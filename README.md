@@ -18,7 +18,7 @@ Term: Fall 2016
 
 [for the simple presentation version please click here (looks nice but not as detailed as below though.)](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/project%204%20presentation_ch3129.compressed.pdf)
 
-*I was not chosen to present this time. I did the presentation version just to clearly explain my procedures.)
+*I was not chosen to present this time. I did the presentation version just to clearly explain my procedures.*
 
 +#################################### **My Thoughts** ####################################
 
