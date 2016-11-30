@@ -16,7 +16,9 @@ Term: Fall 2016
 + Project Goals: In this project we will explore the association between music features and lyrics words from a subset of songs in the million song data. Association rule mining has a wide range of applications that include marketing research (on co-purchasing), natural language processing, finance, public health and etc. Here the word "rules" is really as general as any interesting and meaningful patterns. Based on the association patterns identified, we will create lyric words recommender algorithms for a piece of music (using its music features).
 + Project summary: After intensive exploring, I tried out three methods. 1. Baseline, 2. Clustering and 3. Topic Modeling. **Suprisingly, I conclude that the Baseline Model gives me a better results using Cross Validation**. Please see the below for more details.
 
+[for the simple presentation version please click here (looks nice but not as detailed as below though.)](https://github.com/TZstatsADS/Fall2016-proj4-CHuang0-0/blob/master/project%204%20presentation_ch3129.compressed.pdf)
 
+*I was not chosen to present this time. I did the presentation version just to clearly explain my procedures.)
 
 +#################################### **My Thoughts** ####################################
 
